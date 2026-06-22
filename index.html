@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Timetable & Absence Management System</title>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="calendar"></i>
+                </div>
+                <h1>College Timetable</h1>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-panel="dashboard">
+                        <i data-lucide="layout-dashboard"></i>
+                        Dashboard
+                    </li>
+                    <li class="nav-item" data-panel="generator">
+                        <i data-lucide="sliders"></i>
+                        Timetable Engine
+                    </li>
+                    <li class="nav-item" data-panel="staff">
+                        <i data-lucide="users"></i>
+                        Staff Directory
+                    </li>
+                    <li class="nav-item" data-panel="subjects">
+                        <i data-lucide="book-open"></i>
+                        Subjects & Labs
+                    </li>
+                    <li class="nav-item" data-panel="absence">
+                        <i data-lucide="shield-alert"></i>
+                        Absence Control
+                    </li>
+                    <li class="nav-item" data-panel="reports">
+                        <i data-lucide="bar-chart-3"></i>
+                        Reports & Load
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    <span>System Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h2 id="current-panel-title">Dashboard</h2>
+                </div>
+                <div class="user-profile">
+                    <span class="user-avatar">AD</span>
+                    <div>
+                        <p style="font-size: 0.9rem; font-weight: 600;">System Administrator</p>
+                        <p style="font-size: 0.75rem; color: hsl(var(--text-muted));">Academic Cell</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 1. DASHBOARD PANEL -->
+            <section id="dashboard-panel" class="panel active">
+                <!-- Statistics Grid -->
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-icon purple">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Total Staff</h3>
+                            <div class="stats-value" id="stat-total-staff">30</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon blue">
+                            <i data-lucide="calendar-days"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Active Schedules</h3>
+                            <div class="stats-value" id="stat-active-classes">94</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon emerald">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Backup Coverage</h3>
+                            <div class="stats-value" id="stat-backup-coverage">100%</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon amber">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Absences Substitution</h3>
+                            <div class="stats-value" id="stat-absences-handled">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Split Layout -->
+                <div class="dashboard-layout">
+                    <!-- Left Main Dashboard -->
+                    <div class="dashboard-main">
+                        <!-- Quick Timetable Summary -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Engine Status & Quick Actions</h3>
+                                <button class="btn btn-primary" id="dash-generate-btn">
+                                    <i data-lucide="sparkles"></i> Generate Timetable
+                                </button>
+                            </div>
+                            
+                            <div class="checklist-container">
+                                <div class="checklist-item done" id="chk-data-seeded">
+                                    <i data-lucide="check-circle-2"></i>
+                                    <span>Core datasets successfully loaded (30+ Staff, 25+ Subjects, 13 Rooms).</span>
+                                </div>
+                                <div class="checklist-item done" id="chk-curriculum-mapped">
+                                    <i data-lucide="check-circle-2"></i>
+                                    <span>Curriculum mappings defined for 6 Class Sections.</span>
+                                </div>
+                                <div class="checklist-item pending" id="chk-timetable-status">
+                                    <i data-lucide="help-circle"></i>
+                                    <span id="chk-timetable-text">Timetable needs generation for the current semester.</span>
+                                </div>
+                                <div class="checklist-item pending" id="chk-backup-status">
+                                    <i data-lucide="help-circle"></i>
+                                    <span id="chk-backup-text">Backup staff allocations will be computed during generation.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Overview Card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Active Absences Simulator Overview</h3>
+                                <button class="btn btn-secondary" onclick="app.switchView('absence')">Go to Simulator</button>
+                            </div>
+                            <p style="color: hsl(var(--text-secondary)); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px;">
+                                Simulate staff absences to witness the real-time substitution engine in action. The system will automatically select the pre-arranged backup, check availability, send SMS/Notification logs, or locate a departmental replacement if the backup is double-booked.
+                            </p>
+                            <div id="active-absences-list" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Will be filled by JS -->
+                                <p style="color: hsl(var(--text-muted)); font-style: italic; font-size: 0.85rem;">No active absences reported today.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar Dashboard (Substitution Log Feed) -->
+                    <div class="dashboard-side">
+                        <div class="card" style="height: 100%;">
+                            <div class="card-header">
+                                <h3>Real-time Substitution Feed</h3>
+                            </div>
+                            <div class="log-feed" id="dash-log-feed">
+                                <p style="color: hsl(var(--text-muted)); font-style: italic; font-size: 0.85rem; text-align: center; margin-top: 40px;">No substitution activities registered.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TIMETABLE GENERATOR PANEL -->
+            <section id="generator-panel" class="panel">
+                <div class="action-bar">
+                    <div class="filters-group">
+                        <label for="filter-view-type" style="font-size: 0.85rem; font-weight: 600;">View By:</label>
+                        <select class="select-input" id="filter-view-type">
+                            <option value="section">Class Section</option>
+                            <option value="teacher">Staff Member</option>
+                            <option value="room">Physical Room</option>
+                        </select>
+
+                        <label for="filter-view-value" style="font-size: 0.85rem; font-weight: 600;">Selection:</label>
+                        <select class="select-input" id="filter-view-value">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-secondary" id="generator-reset-btn">Reset Data</button>
+                        <button class="btn btn-primary" id="generator-run-btn">
+                            <i data-lucide="refresh-cw"></i> Run CSP Generator
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Quick Switch Tabs -->
+                <div id="timetable-tabs-container" style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;"></div>
+
+                <div id="timetable-view-wrapper">
+                    <!-- Timetable content loaded here -->
+                </div>
+            </section>
+
+            <!-- 3. STAFF DIRECTORY PANEL -->
+            <section id="staff-panel" class="panel">
+                <div class="action-bar">
+                    <input type="text" class="search-input" id="staff-search" placeholder="Search staff by name or dept...">
+                    <button class="btn btn-primary" id="add-staff-btn">
+                        <i data-lucide="user-plus"></i> Add New Staff
+                    </button>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                                <th>Expertise Subjects</th>
+                                <th>Weekly Load</th>
+                                <th>Attendance Status</th>
+                                <th>Simulate Action</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-table-body">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. SUBJECTS & LABS PANEL -->
+            <section id="subjects-panel" class="panel">
+                <div class="action-bar">
+                    <input type="text" class="search-input" id="subject-search" placeholder="Search subjects by code or name...">
+                    <button class="btn btn-primary" id="add-subject-btn">
+                        <i data-lucide="plus-circle"></i> Add New Subject
+                    </button>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Department</th>
+                                <th>Type</th>
+                                <th>Required Hours/Week</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subject-table-body">
+                            <!-- Filled dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. ABSENCE SIMULATOR PANEL -->
+            <section id="absence-panel" class="panel">
+                <div class="dashboard-layout">
+                    <!-- Left panel: Trigger absence -->
+                    <div class="dashboard-main">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Report Staff Absence</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="absent-staff-select">Select Absent Staff Member:</label>
+                                <select class="select-input" id="absent-staff-select" style="width: 100%;">
+                                    <!-- Filled dynamically -->
+                                </select>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                                <button class="btn btn-danger" id="trigger-absence-btn">
+                                    <i data-lucide="shield-alert"></i> Process Absence & Auto-Substitute
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Active Absences Tracker -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Active Absences Today</h3>
+                            </div>
+                            <div class="data-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Staff ID</th>
+                                            <th>Name</th>
+                                            <th>Department</th>
+                                            <th>Email</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="active-absences-table-body">
+                                        <!-- Filled dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right panel: Live logs and notifications -->
+                    <div class="dashboard-side">
+                        <div class="card" style="height: 100%;">
+                            <div class="card-header">
+                                <h3>Substitution Audit Logs</h3>
+                            </div>
+                            <div class="log-feed" id="absence-log-feed">
+                                <!-- Logs filled dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. REPORTS & ANALYTICS PANEL -->
+            <section id="reports-panel" class="panel">
+                <div class="reports-layout">
+                    <!-- Workload Distribution -->
+                    <div class="chart-card">
+                        <h3>Staff Workload Distribution</h3>
+                        <p style="color: hsl(var(--text-muted)); font-size: 0.8rem; margin-bottom: 12px;">Visual balance of current assigned hours vs maximum weekly threshold.</p>
+                        <div class="chart-container">
+                            <canvas id="workloadChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Substitution Success Rates -->
+                    <div class="chart-card">
+                        <h3>Absence Mitigation & Coverage Stats</h3>
+                        <p style="color: hsl(var(--text-muted)); font-size: 0.8rem; margin-bottom: 12px;">Success distribution of backup handovers vs critical administrator alerts.</p>
+                        <div class="chart-container">
+                            <canvas id="coverageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- STAFF MODAL -->
+    <div class="modal-overlay" id="staff-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="staff-modal-title">Add New Staff Member</h3>
+                <span class="modal-close" id="staff-modal-close"><i data-lucide="x"></i></span>
+            </div>
+            <div class="modal-body">
+                <form id="staff-form">
+                    <input type="hidden" id="staff-form-id-field">
+                    <div class="form-group">
+                        <label for="staff-form-id">Staff ID (e.g. ST050)</label>
+                        <input type="text" class="form-input" id="staff-form-id" required placeholder="ST050">
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-form-name">Full Name</label>
+                        <input type="text" class="form-input" id="staff-form-name" required placeholder="Dr. Jane Doe">
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="staff-form-dept">Department</label>
+                            <select class="select-input" id="staff-form-dept">
+                                <option value="CSE">CSE</option>
+                                <option value="ECE">ECE</option>
+                                <option value="ME">ME</option>
+                                <option value="CE">CE</option>
+                                <option value="EEE">EEE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-form-hours">Max Hours/Week</label>
+                            <input type="number" class="form-input" id="staff-form-hours" required min="4" max="25" value="15">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="staff-form-email">Email Address</label>
+                        <input type="email" class="form-input" id="staff-form-email" required placeholder="jane.doe@college.edu">
+                    </div>
+                    <div class="form-group">
+                        <label>Expertise Subjects (Check all that apply)</label>
+                        <div class="checkbox-group" id="staff-form-subjects-container">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="staff-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="staff-modal-save">Save Staff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUBJECT MODAL -->
+    <div class="modal-overlay" id="subject-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="subject-modal-title">Add New Subject</h3>
+                <span class="modal-close" id="subject-modal-close"><i data-lucide="x"></i></span>
+            </div>
+            <div class="modal-body">
+                <form id="subject-form">
+                    <div class="form-group">
+                        <label for="subject-form-code">Subject Code (e.g. CS204)</label>
+                        <input type="text" class="form-input" id="subject-form-code" required placeholder="CS204">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-form-name">Subject Name</label>
+                        <input type="text" class="form-input" id="subject-form-name" required placeholder="Theory of Computation">
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="subject-form-dept">Department</label>
+                            <select class="select-input" id="subject-form-dept">
+                                <option value="CSE">CSE</option>
+                                <option value="ECE">ECE</option>
+                                <option value="ME">ME</option>
+                                <option value="CE">CE</option>
+                                <option value="EEE">EEE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject-form-type">Type</label>
+                            <select class="select-input" id="subject-form-type">
+                                <option value="Theory">Theory</option>
+                                <option value="Practical/Lab">Practical/Lab</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-form-hours">Hours per Week</label>
+                        <input type="number" class="form-input" id="subject-form-hours" required min="1" max="6" value="3">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="subject-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="subject-modal-save">Save Subject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLOT ADJUSTMENT MODAL -->
+    <div class="modal-overlay" id="slot-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Adjust Timetable Slot</h3>
+                <span class="modal-close" id="slot-modal-close"><i data-lucide="x"></i></span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="slot-form-id">
+                <div style="background-color: hsl(var(--bg-surface-elevated)); border: 1px solid hsl(var(--border-color)); padding: 12px 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+                    <p style="font-size: 0.85rem; font-weight: 600; color: hsl(var(--text-secondary));">Adjusting class slot for:</p>
+                    <p id="slot-info-summary" style="font-size: 1rem; font-weight: 700; margin-top: 4px;"></p>
+                </div>
+                <div class="form-group">
+                    <label for="slot-form-teacher">Primary Teacher:</label>
+                    <select class="select-input" id="slot-form-teacher" style="width: 100%;">
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="slot-form-backup">Backup Teacher:</label>
+                    <select class="select-input" id="slot-form-backup" style="width: 100%;">
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="slot-form-room">Physical Room / Lab:</label>
+                    <select class="select-input" id="slot-form-room" style="width: 100%;">
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+
+                <!-- Real-time Conflict validation checklist inside modal -->
+                <div style="margin-top: 16px; border-top: 1px solid hsl(var(--border-color)); padding-top: 16px;">
+                    <p style="font-size: 0.8rem; font-weight: 600; color: hsl(var(--text-secondary)); margin-bottom: 8px;">Real-time Verification:</p>
+                    <div id="modal-conflict-warnings" style="display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Conflict messages are printed here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="slot-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="slot-modal-save">Apply Adjustment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Notifications container -->
+    <div id="toast-container"></div>
+
+    <!-- Core App Logic Scripts -->
+    <script src="data.js"></script>
+    <script src="generator.js"></script>
+    <script src="absence.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
