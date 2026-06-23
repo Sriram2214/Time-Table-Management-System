@@ -90,8 +90,96 @@ const LEGACY_CURRICULUM = {
         { code: "EE401",  hours: 3 }, { code: "EE401L", hours: 4 },
         { code: "EE402",  hours: 3 }, { code: "EE402L", hours: 2 },
         { code: "EE403",  hours: 3 }, { code: "EE404",  hours: 3 }
+    ],
+    // ── IT ───────────────────────────────────────────────────────────────────
+    "IT-Y1": [
+        { code: "IT101",  hours: 3 }, { code: "IT101L", hours: 4 },
+        { code: "IT102",  hours: 3 }, { code: "IT103",  hours: 3 }
+    ],
+    "IT-Y2": [
+        { code: "IT201",  hours: 3 }, { code: "IT201L", hours: 4 },
+        { code: "IT202",  hours: 3 }, { code: "IT202L", hours: 2 }, { code: "IT203", hours: 3 }
+    ],
+    "IT-Y3": [
+        { code: "IT301",  hours: 3 }, { code: "IT301L", hours: 4 },
+        { code: "IT302",  hours: 3 }, { code: "IT302L", hours: 2 }, { code: "IT303", hours: 3 }
+    ],
+    "IT-Y4": [
+        { code: "IT401",  hours: 3 }, { code: "IT401L", hours: 4 },
+        { code: "IT402",  hours: 3 }, { code: "IT402L", hours: 2 },
+        { code: "IT403",  hours: 3 }, { code: "IT404",  hours: 3 }
+    ],
+    // ── AIDS ─────────────────────────────────────────────────────────────────
+    "AIDS-Y1": [
+        { code: "AD101",  hours: 3 }, { code: "AD101L", hours: 4 },
+        { code: "AD102",  hours: 3 }, { code: "AD103",  hours: 3 }
+    ],
+    "AIDS-Y2": [
+        { code: "AD201",  hours: 3 }, { code: "AD201L", hours: 4 },
+        { code: "AD202",  hours: 3 }, { code: "AD202L", hours: 2 }, { code: "AD203", hours: 3 }
+    ],
+    "AIDS-Y3": [
+        { code: "AD301",  hours: 3 }, { code: "AD301L", hours: 4 },
+        { code: "AD302",  hours: 3 }, { code: "AD302L", hours: 2 }, { code: "AD303", hours: 3 }
+    ],
+    "AIDS-Y4": [
+        { code: "AD401",  hours: 3 }, { code: "AD401L", hours: 4 },
+        { code: "AD402",  hours: 3 }, { code: "AD402L", hours: 2 },
+        { code: "AD403",  hours: 3 }, { code: "AD404",  hours: 3 }
+    ],
+    // ── CHEM ─────────────────────────────────────────────────────────────────
+    "CHEM-Y1": [
+        { code: "CH101",  hours: 3 }, { code: "CH101L", hours: 4 },
+        { code: "CH102",  hours: 3 }, { code: "CH103",  hours: 3 }
+    ],
+    "CHEM-Y2": [
+        { code: "CH201",  hours: 3 }, { code: "CH201L", hours: 4 },
+        { code: "CH202",  hours: 3 }, { code: "CH202L", hours: 2 }, { code: "CH203", hours: 3 }
+    ],
+    "CHEM-Y3": [
+        { code: "CH301",  hours: 3 }, { code: "CH301L", hours: 4 },
+        { code: "CH302",  hours: 3 }, { code: "CH302L", hours: 2 }, { code: "CH303", hours: 3 }
+    ],
+    "CHEM-Y4": [
+        { code: "CH401",  hours: 3 }, { code: "CH401L", hours: 4 },
+        { code: "CH402",  hours: 3 }, { code: "CH403",  hours: 3 }, { code: "CH404", hours: 3 }
+    ],
+    // ── BME ──────────────────────────────────────────────────────────────────
+    "BME-Y1": [
+        { code: "BM101",  hours: 3 }, { code: "BM101L", hours: 4 },
+        { code: "BM102",  hours: 3 }, { code: "BM103",  hours: 3 }
+    ],
+    "BME-Y2": [
+        { code: "BM201",  hours: 3 }, { code: "BM201L", hours: 4 },
+        { code: "BM202",  hours: 3 }, { code: "BM202L", hours: 2 }, { code: "BM203", hours: 3 }
+    ],
+    "BME-Y3": [
+        { code: "BM301",  hours: 3 }, { code: "BM301L", hours: 4 },
+        { code: "BM302",  hours: 3 }, { code: "BM302L", hours: 2 }, { code: "BM303", hours: 3 }
+    ],
+    "BME-Y4": [
+        { code: "BM401",  hours: 3 }, { code: "BM401L", hours: 4 },
+        { code: "BM402",  hours: 3 }, { code: "BM403",  hours: 3 }, { code: "BM404", hours: 3 }
+    ],
+    // ── AERO ─────────────────────────────────────────────────────────────────
+    "AERO-Y1": [
+        { code: "AE101",  hours: 3 }, { code: "AE101L", hours: 4 },
+        { code: "AE102",  hours: 3 }, { code: "AE103",  hours: 3 }
+    ],
+    "AERO-Y2": [
+        { code: "AE201",  hours: 3 }, { code: "AE201L", hours: 4 },
+        { code: "AE202",  hours: 3 }, { code: "AE202L", hours: 2 }, { code: "AE203", hours: 3 }
+    ],
+    "AERO-Y3": [
+        { code: "AE301",  hours: 3 }, { code: "AE301L", hours: 4 },
+        { code: "AE302",  hours: 3 }, { code: "AE302L", hours: 2 }, { code: "AE303", hours: 3 }
+    ],
+    "AERO-Y4": [
+        { code: "AE401",  hours: 3 }, { code: "AE401L", hours: 4 },
+        { code: "AE402",  hours: 3 }, { code: "AE403",  hours: 3 }, { code: "AE404", hours: 3 }
     ]
 };
+
 
 
 const TimetableGenerator = {
@@ -141,16 +229,17 @@ const TimetableGenerator = {
     // ── Get Curriculum: dynamic if custom data, legacy if default sections ────
     getCurriculum(sections, subjects) {
         const legacyIds = new Set(Object.keys(LEGACY_CURRICULUM));
+        // If all sections match the legacy 40-section set, use proven curriculum
         const allLegacy = sections.every(s => legacyIds.has(s.id));
 
         if (allLegacy) {
-            // Use the proven legacy curriculum for default data
             return LEGACY_CURRICULUM;
         }
 
-        // Build dynamic curriculum from uploaded data
+        // Build dynamic curriculum from custom imported data
         return this.buildDynamicCurriculum(sections, subjects);
     },
+
 
     // ── Main Generate Function ────────────────────────────────────────────────
     generate() {
