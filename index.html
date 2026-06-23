@@ -10,6 +10,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS CDN for Excel support -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -189,16 +191,25 @@
                             <option value="section">Class Section</option>
                             <option value="teacher">Staff Member</option>
                             <option value="room">Physical Room</option>
+                            <option value="year-dept">Year & Department</option>
                         </select>
 
                         <label for="filter-view-value" style="font-size: 0.85rem; font-weight: 600;">Selection:</label>
                         <select class="select-input" id="filter-view-value">
                             <!-- Populated dynamically -->
                         </select>
+
+                        <label for="filter-dept-value" id="filter-dept-label" style="font-size: 0.85rem; font-weight: 600; display: none; margin-left: 8px;">Department:</label>
+                        <select class="select-input" id="filter-dept-value" style="display: none;">
+                            <!-- Populated dynamically -->
+                        </select>
                     </div>
                     
                     <div style="display: flex; gap: 12px;">
-                        <button class="btn btn-secondary" id="generator-reset-btn">Reset Data</button>
+                        <button class="btn btn-secondary" id="generator-import-btn">
+                            <i data-lucide="upload"></i> Import Data
+                        </button>
+                        <input type="file" id="import-file-input" accept=".json,.csv" style="display:none;">
                         <button class="btn btn-primary" id="generator-run-btn">
                             <i data-lucide="refresh-cw"></i> Run CSP Generator
                         </button>
@@ -508,6 +519,106 @@
 
     <!-- Alert Notifications container -->
     <div id="toast-container"></div>
+
+    <!-- IMPORT DATA MODAL -->
+    <div class="modal-overlay" id="import-modal-overlay">
+        <div class="modal" style="max-width: 720px; width: 95%;">
+            <div class="modal-header">
+                <h3 id="import-modal-title" style="display:flex;align-items:center;gap:10px;"><i data-lucide="upload-cloud" style="width:20px;height:20px;"></i> Import Data &amp; Auto-Generate Timetable</h3>
+                <span class="modal-close" id="import-modal-close"><i data-lucide="x"></i></span>
+            </div>
+            <div class="modal-body" style="padding:0;">
+
+                <!-- Tab Nav -->
+                <div id="import-tabs" style="display:flex;border-bottom:1px solid hsl(var(--border-color));padding: 0 24px;">
+                    <button class="import-tab-btn active" data-tab="staff" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--primary));border-bottom:2px solid hsl(var(--primary));margin-bottom:-1px;">Staff</button>
+                    <button class="import-tab-btn" data-tab="subjects" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--text-secondary));border-bottom:2px solid transparent;margin-bottom:-1px;">Subjects</button>
+                    <button class="import-tab-btn" data-tab="sections" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--text-secondary));border-bottom:2px solid transparent;margin-bottom:-1px;">Sections</button>
+                </div>
+
+                <!-- Tab Panels -->
+                <div style="padding:20px 24px;">
+
+                    <!-- Staff Tab -->
+                    <div id="import-tab-staff" class="import-tab-panel">
+                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
+                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
+                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
+                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
+                            </div>
+                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">id, name, dept, email, subjects, maxHoursPerWeek</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "id":"ST001", "name":"Dr. Name", "dept":"CSE", "email":"a@b.com", "subjects":"CS101,CS201", "maxHoursPerWeek":15 } ]</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers (id, name, dept, email, subjects, maxHoursPerWeek). subjects column = comma-separated codes.</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="import-staff-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
+                            <input type="file" id="import-staff-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
+                            <span id="import-staff-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
+                            <button class="btn btn-secondary" id="import-staff-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
+                        </div>
+                        <div id="import-staff-preview" style="max-height:180px;overflow-y:auto;"></div>
+                    </div>
+
+                    <!-- Subjects Tab -->
+                    <div id="import-tab-subjects" class="import-tab-panel" style="display:none;">
+                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
+                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
+                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
+                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
+                            </div>
+                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">code, name, dept, type, hoursPerWeek</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "code":"CS101", "name":"Intro to Programming", "dept":"CSE", "type":"Theory", "hoursPerWeek":3 } ]</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers. type = "Theory" or "Practical/Lab".</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="import-subjects-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
+                            <input type="file" id="import-subjects-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
+                            <span id="import-subjects-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
+                            <button class="btn btn-secondary" id="import-subjects-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
+                        </div>
+                        <div id="import-subjects-preview" style="max-height:180px;overflow-y:auto;"></div>
+                    </div>
+
+                    <!-- Sections Tab -->
+                    <div id="import-tab-sections" class="import-tab-panel" style="display:none;">
+                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
+                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
+                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
+                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
+                            </div>
+                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">id, name, dept</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "id":"CSE-Y1", "name":"CSE 1st Year", "dept":"CSE" } ]</code></p>
+                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers (id, name, dept).</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="import-sections-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
+                            <input type="file" id="import-sections-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
+                            <span id="import-sections-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
+                            <button class="btn btn-secondary" id="import-sections-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
+                        </div>
+                        <div id="import-sections-preview" style="max-height:180px;overflow-y:auto;"></div>
+                    </div>
+
+                </div>
+
+                <!-- Status Summary Bar -->
+                <div id="import-status-bar" style="display:flex;gap:16px;padding:12px 24px;background:hsl(var(--bg-surface-elevated));border-top:1px solid hsl(var(--border-color));flex-wrap:wrap;">
+                    <span id="import-status-staff" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="users" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Staff: <strong>–</strong></span>
+                    <span id="import-status-subjects" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="book-open" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Subjects: <strong>–</strong></span>
+                    <span id="import-status-sections" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="layout-grid" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Sections: <strong>–</strong></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="import-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="import-modal-confirm" disabled style="opacity:0.5;">
+                    <i data-lucide="sparkles"></i> Import &amp; Auto-Generate Timetable
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Core App Logic Scripts -->
     <script src="data.js"></script>

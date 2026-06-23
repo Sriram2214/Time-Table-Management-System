@@ -82,14 +82,9 @@ const app = {
             this.simulateCSPGeneration();
         });
 
-        // Generator reset button
-        document.getElementById('generator-reset-btn').addEventListener('click', () => {
-            if (confirm("Are you sure you want to reset all staff, subjects, schedules, and logs to the original default seed data? This will clear any manual edits.")) {
-                DataStore.resetAll();
-                this.showToast("System reset to initial seeds.", "success");
-                this.renderAll();
-                this.updateCharts();
-            }
+        // Generator import button
+        document.getElementById('generator-import-btn').addEventListener('click', () => {
+            this.openImportModal();
         });
 
         // Filter dropdown views
@@ -99,6 +94,10 @@ const app = {
         });
 
         document.getElementById('filter-view-value').addEventListener('change', () => {
+            this.renderTimetableGrid();
+        });
+
+        document.getElementById('filter-dept-value').addEventListener('change', () => {
             this.renderTimetableGrid();
         });
 
@@ -129,6 +128,8 @@ const app = {
         document.getElementById('subject-modal-cancel').addEventListener('click', () => this.closeModal('subject'));
         document.getElementById('slot-modal-close').addEventListener('click', () => this.closeModal('slot'));
         document.getElementById('slot-modal-cancel').addEventListener('click', () => this.closeModal('slot'));
+        document.getElementById('import-modal-close').addEventListener('click', () => this.closeModal('import'));
+        document.getElementById('import-modal-cancel').addEventListener('click', () => this.closeModal('import'));
 
         // Modal save actions
         document.getElementById('staff-modal-save').addEventListener('click', (e) => {
@@ -230,9 +231,31 @@ const app = {
     populateFilterValues() {
         const viewType = document.getElementById('filter-view-type').value;
         const selectValue = document.getElementById('filter-view-value');
+        const deptLabel = document.getElementById('filter-dept-label');
+        const deptValue = document.getElementById('filter-dept-value');
         const prevSelected = selectValue.value;
         
         selectValue.innerHTML = "";
+
+        // Show/hide department filter based on viewType
+        if (viewType === 'year-dept') {
+            if (deptLabel) deptLabel.style.display = 'inline-block';
+            if (deptValue) {
+                deptValue.style.display = 'inline-block';
+                if (deptValue.innerHTML === "") {
+                    deptValue.innerHTML = '<option value="all">All Departments</option>';
+                    DEFAULT_DEPARTMENTS.forEach(d => {
+                        const opt = document.createElement('option');
+                        opt.value = d;
+                        opt.innerText = d;
+                        deptValue.appendChild(opt);
+                    });
+                }
+            }
+        } else {
+            if (deptLabel) deptLabel.style.display = 'none';
+            if (deptValue) deptValue.style.display = 'none';
+        }
 
         if (viewType === 'section') {
             const sections = DataStore.getSections();
@@ -258,6 +281,29 @@ const app = {
                 opt.innerText = `${r.name} (${r.type})`;
                 selectValue.appendChild(opt);
             });
+        } else if (viewType === 'year-dept') {
+            const sections = DataStore.getSections();
+            const years = new Set();
+            sections.forEach(sec => {
+                const match = sec.name.match(/\d+(?:st|nd|rd|th)\s+Year/i);
+                if (match) {
+                    years.add(match[0]);
+                } else {
+                    const idMatch = sec.id.match(/-Y(\d+)/i);
+                    if (idMatch) {
+                        const num = idMatch[1];
+                        const suffix = num === '1' ? 'st' : num === '2' ? 'nd' : num === '3' ? 'rd' : 'th';
+                        years.add(`${num}${suffix} Year`);
+                    }
+                }
+            });
+            const sortedYears = Array.from(years).sort();
+            sortedYears.forEach(year => {
+                const opt = document.createElement('option');
+                opt.value = year;
+                opt.innerText = year;
+                selectValue.appendChild(opt);
+            });
         }
 
         // Restore selection if possible, otherwise default to first
@@ -279,6 +325,90 @@ const app = {
         const schedule = DataStore.getSchedule();
         const staff = DataStore.getStaff();
         const subjects = DataStore.getSubjects();
+
+        if (viewType === 'year-dept') {
+            const selectedDept = document.getElementById('filter-dept-value').value;
+            const sections = DataStore.getSections();
+            const yearSections = sections.filter(sec => sec.name.toLowerCase().includes(viewVal.toLowerCase()));
+            const targetSections = selectedDept === 'all' 
+                ? yearSections 
+                : yearSections.filter(sec => sec.dept === selectedDept);
+
+            if (targetSections.length === 0) {
+                wrapper.innerHTML = `<p style="color: hsl(var(--text-muted)); text-align: center; margin-top: 40px;">No sections found for ${viewVal} in Department: ${selectedDept}.</p>`;
+                return;
+            }
+
+            wrapper.innerHTML = targetSections.map(sec => {
+                const slotsToUse = getSlotsForSection(sec.id);
+                return `
+                    <div class="timetable-section-wrapper" style="margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: hsl(var(--primary)); border-left: 4px solid hsl(var(--primary)); padding-left: 10px; font-weight: 700;">
+                            ${sec.name} Timetable
+                        </h3>
+                        <div class="timetable-container">
+                            <div class="timetable-grid">
+                                <div class="grid-header">Slots</div>
+                                ${WORKING_DAYS.map(day => `<div class="grid-header day-header">${day}</div>`).join('')}
+                                
+                                ${slotsToUse.map(slot => {
+                                    let timeText = slot.time;
+                                    let html = `<div class="time-col"><span>${slot.label}</span><span style="font-size:0.7rem; line-height:1.2; text-align:center; margin-top:4px;">${timeText}</span></div>`;
+                                    
+                                    WORKING_DAYS.forEach(day => {
+                                        let match = schedule.find(s => s.sectionId === sec.id && s.day === day && s.period === slot.period);
+                                        if (match) {
+                                            const sub = subjects.find(s => s.code === match.subjectCode);
+                                            const teacher = staff.find(t => t.id === match.teacherId);
+                                            const backup = staff.find(t => t.id === match.backupTeacherId);
+                                            const currentT = staff.find(t => t.id === match.currentTeacherId);
+
+                                            const isSubbed = match.isSubstituted;
+                                            const subClass = isSubbed ? 'substituted' : '';
+                                            
+                                            const backupText = backup ? `Backup: ${backup.name}` : 'Backup: None';
+                                            const teacherName = teacher ? teacher.name : match.teacherId;
+                                            const currentTeacherName = currentT ? currentT.name : match.currentTeacherId;
+
+                                            const indicatorColor = match.backupTeacherId ? 'green' : 'red';
+                                            const badgeTooltip = match.backupTeacherId ? 'Backup pre-allocated' : 'No free backup available!';
+                                            
+                                            const exactTime = slotsToUse[match.period].time;
+
+                                            html += `
+                                                <div class="schedule-cell ${subClass}" onclick="app.openSlotModal('${match.id}')">
+                                                    <div class="cell-subject">
+                                                        <span>${match.subjectCode}</span>
+                                                        <span class="cell-status-badge ${indicatorColor}" title="${badgeTooltip}"></span>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                                        <span class="cell-room">${match.roomName}</span>
+                                                        <span style="font-size: 0.7rem; font-weight: 600; color: hsl(var(--text-muted));">${exactTime.split(' - ')[0]}</span>
+                                                    </div>
+                                                    <div class="cell-teachers">
+                                                        ${isSubbed 
+                                                            ? `<span class="cell-teacher">${teacherName}</span>
+                                                               <span class="cell-substitute-name"><i data-lucide="refresh-cw" style="width: 10px; height: 10px; display: inline; vertical-align: middle;"></i> ${currentTeacherName}</span>`
+                                                            : `<span class="cell-teacher">${currentTeacherName}</span>`
+                                                        }
+                                                        <span class="cell-backup">${backupText}</span>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        } else {
+                                            html += `<div class="schedule-cell empty"></div>`;
+                                        }
+                                    });
+                                    return html;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+            return;
+        }
 
         // Determine which set of slots to use for rendering
         const slotsToUse = (viewType === 'section') ? getSlotsForSection(viewVal) : OTHER_YEAR_SLOTS;
@@ -1166,6 +1296,286 @@ const app = {
             unassigned
         ];
         this.charts.coverage.update();
+    },
+
+    // ─────────────────────────────────────────────────────────────────
+    // IMPORT DATA MODAL
+    // ─────────────────────────────────────────────────────────────────
+    _importState: {
+        staff: null,
+        subjects: null,
+        sections: null
+    },
+
+    openImportModal() {
+        // Reset state
+        this._importState = { staff: null, subjects: null, sections: null };
+        ['staff', 'subjects', 'sections'].forEach(type => {
+            document.getElementById(`import-${type}-preview`).innerHTML = '';
+            document.getElementById(`import-${type}-filename`).innerText = 'No file chosen';
+            document.getElementById(`import-${type}-input`).value = '';
+        });
+        this._updateImportStatusBar();
+        this._setImportTab('staff');
+        document.getElementById('import-modal-overlay').classList.add('active');
+
+        // Tab buttons
+        document.querySelectorAll('.import-tab-btn').forEach(btn => {
+            btn.onclick = () => this._setImportTab(btn.getAttribute('data-tab'));
+        });
+
+        // File pickers
+        ['staff', 'subjects', 'sections'].forEach(type => {
+            const fileBtn = document.getElementById(`import-${type}-file-btn`);
+            const fileInput = document.getElementById(`import-${type}-input`);
+            fileBtn.onclick = () => fileInput.click();
+            fileInput.onchange = (e) => this._handleImportFile(type, e.target.files[0]);
+
+            const sampleBtn = document.getElementById(`import-${type}-sample-btn`);
+            sampleBtn.onclick = () => this._loadSampleData(type);
+        });
+
+        // Confirm
+        document.getElementById('import-modal-confirm').onclick = () => this._confirmImport();
+
+        lucide.createIcons();
+    },
+
+    _setImportTab(tab) {
+        document.querySelectorAll('.import-tab-panel').forEach(p => p.style.display = 'none');
+        document.getElementById(`import-tab-${tab}`).style.display = 'block';
+        document.querySelectorAll('.import-tab-btn').forEach(btn => {
+            const isActive = btn.getAttribute('data-tab') === tab;
+            btn.style.color = isActive ? 'hsl(var(--primary))' : 'hsl(var(--text-secondary))';
+            btn.style.borderBottom = isActive ? '2px solid hsl(var(--primary))' : '2px solid transparent';
+        });
+    },
+
+    _handleImportFile(type, file) {
+        if (!file) return;
+        document.getElementById(`import-${type}-filename`).innerText = file.name;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        if (ext === 'json') {
+            // ── JSON parsing ──────────────────────────────────────────
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) throw new Error('Expected a JSON array.');
+                    const normalized = this._normalizeImportRows(type, data);
+                    this._importState[type] = normalized;
+                    this._renderImportPreview(type, normalized);
+                    this._updateImportStatusBar();
+                } catch (err) {
+                    this.showToast(`Invalid JSON file: ${err.message}`, 'error');
+                    document.getElementById(`import-${type}-preview`).innerHTML =
+                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ JSON parse error: ${err.message}</p>`;
+                }
+            };
+            reader.readAsText(file);
+
+        } else if (ext === 'csv') {
+            // ── CSV parsing ───────────────────────────────────────────
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = this._parseCSV(e.target.result);
+                    if (!data.length) throw new Error('CSV file is empty or has no data rows.');
+                    const normalized = this._normalizeImportRows(type, data);
+                    this._importState[type] = normalized;
+                    this._renderImportPreview(type, normalized);
+                    this._updateImportStatusBar();
+                } catch (err) {
+                    this.showToast(`Invalid CSV file: ${err.message}`, 'error');
+                    document.getElementById(`import-${type}-preview`).innerHTML =
+                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ CSV parse error: ${err.message}</p>`;
+                }
+            };
+            reader.readAsText(file);
+
+        } else if (ext === 'xlsx' || ext === 'xls') {
+            // ── Excel parsing via SheetJS ─────────────────────────────
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded yet. Please wait and retry.');
+                    const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rawData = XLSX.utils.sheet_to_json(firstSheet, { defval: '' });
+                    if (!rawData.length) throw new Error('Excel sheet is empty or has no data rows.');
+                    const normalized = this._normalizeImportRows(type, rawData);
+                    this._importState[type] = normalized;
+                    this._renderImportPreview(type, normalized);
+                    this._updateImportStatusBar();
+                } catch (err) {
+                    this.showToast(`Invalid Excel file: ${err.message}`, 'error');
+                    document.getElementById(`import-${type}-preview`).innerHTML =
+                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ Excel parse error: ${err.message}</p>`;
+                }
+            };
+            reader.readAsBinaryString(file);
+
+        } else {
+            this.showToast(`Unsupported file type ".${ext}". Please use .json, .csv, .xlsx or .xls`, 'error');
+        }
+    },
+
+    // ── CSV Parser: returns array of objects (header row → keys) ─────
+    _parseCSV(text) {
+        const lines = text.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+        return lines.slice(1).filter(l => l.trim()).map(line => {
+            // Handle quoted fields with commas inside
+            const values = [];
+            let cur = '', inQuote = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') { inQuote = !inQuote; }
+                else if (ch === ',' && !inQuote) { values.push(cur.trim()); cur = ''; }
+                else { cur += ch; }
+            }
+            values.push(cur.trim());
+            const obj = {};
+            headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/^"|"$/g, ''); });
+            return obj;
+        });
+    },
+
+    // ── Normalize rows: handle subjects as string → array, cast numbers
+    _normalizeImportRows(type, rows) {
+        return rows.map(row => {
+            const r = { ...row };
+            // subjects field: "CS101,CS201" or ["CS101"] → always array
+            if ('subjects' in r) {
+                if (typeof r.subjects === 'string') {
+                    r.subjects = r.subjects ? r.subjects.split(',').map(s => s.trim()).filter(Boolean) : [];
+                } else if (!Array.isArray(r.subjects)) {
+                    r.subjects = [];
+                }
+            }
+            // numeric coercions
+            if ('maxHoursPerWeek' in r) r.maxHoursPerWeek = Number(r.maxHoursPerWeek) || 15;
+            if ('hoursPerWeek' in r)    r.hoursPerWeek    = Number(r.hoursPerWeek)    || 3;
+            return r;
+        });
+    },
+
+    _loadSampleData(type) {
+        const samples = {
+            staff: DEFAULT_STAFF,
+            subjects: DEFAULT_SUBJECTS,
+            sections: DEFAULT_SECTIONS
+        };
+        this._importState[type] = samples[type];
+        document.getElementById(`import-${type}-filename`).innerText = 'Sample data loaded';
+        this._renderImportPreview(type, samples[type]);
+        this._updateImportStatusBar();
+    },
+
+    _renderImportPreview(type, data) {
+        const container = document.getElementById(`import-${type}-preview`);
+        if (!data || data.length === 0) {
+            container.innerHTML = `<p style="color:hsl(var(--text-muted));font-size:0.8rem;">No records to preview.</p>`;
+            return;
+        }
+
+        const headers = Object.keys(data[0]);
+        const rows = data.slice(0, 6); // Preview first 6 rows
+
+        container.innerHTML = `
+            <p style="font-size:0.75rem;color:hsl(var(--text-muted));margin-bottom:6px;">Showing ${Math.min(6,data.length)} of ${data.length} records</p>
+            <div class="data-table-container" style="max-height:140px;overflow:auto;">
+                <table class="data-table" style="font-size:0.75rem;">
+                    <thead>
+                        <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map(row => `<tr>${headers.map(h => {
+                            const val = Array.isArray(row[h]) ? row[h].join(', ') : (row[h] ?? '');
+                            return `<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${val}">${val}</td>`;
+                        }).join('')}</tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    },
+
+    _updateImportStatusBar() {
+        const state = this._importState;
+        const staffCount = state.staff ? state.staff.length : null;
+        const subjectsCount = state.subjects ? state.subjects.length : null;
+        const sectionsCount = state.sections ? state.sections.length : null;
+
+        const fmt = (label, icon, count) => {
+            const color = count !== null ? 'hsl(var(--success))' : 'hsl(var(--text-muted))';
+            const val = count !== null ? `<strong style="color:${color};">${count} records</strong>` : '<strong>–</strong>';
+            return `<i data-lucide="${icon}" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> ${label}: ${val}`;
+        };
+
+        document.getElementById('import-status-staff').innerHTML = fmt('Staff', 'users', staffCount);
+        document.getElementById('import-status-subjects').innerHTML = fmt('Subjects', 'book-open', subjectsCount);
+        document.getElementById('import-status-sections').innerHTML = fmt('Sections', 'layout-grid', sectionsCount);
+
+        // Enable confirm only if at least staff OR subjects OR sections loaded
+        const hasAny = staffCount !== null || subjectsCount !== null || sectionsCount !== null;
+        const btn = document.getElementById('import-modal-confirm');
+        btn.disabled = !hasAny;
+        btn.style.opacity = hasAny ? '1' : '0.5';
+
+        lucide.createIcons();
+    },
+
+    _confirmImport() {
+        const state = this._importState;
+        let imported = [];
+
+        // Merge imported data into DataStore (keep existing where not provided)
+        if (state.staff) {
+            const normalized = state.staff.map(s => ({
+                id: s.id || `ST${Math.random().toString(36).substr(2,4).toUpperCase()}`,
+                name: s.name || 'Unknown',
+                dept: s.dept || 'CSE',
+                email: s.email || '',
+                subjects: Array.isArray(s.subjects) ? s.subjects : [],
+                maxHoursPerWeek: Number(s.maxHoursPerWeek) || 15,
+                isAbsent: false
+            }));
+            DataStore.saveStaff(normalized);
+            imported.push(`${normalized.length} staff`);
+        }
+
+        if (state.subjects) {
+            const normalized = state.subjects.map(s => ({
+                code: s.code || '',
+                name: s.name || '',
+                dept: s.dept || 'CSE',
+                type: s.type || 'Theory',
+                hoursPerWeek: Number(s.hoursPerWeek) || 3
+            }));
+            DataStore.saveSubjects(normalized);
+            imported.push(`${normalized.length} subjects`);
+        }
+
+        if (state.sections) {
+            const normalized = state.sections.map(s => ({
+                id: s.id || '',
+                name: s.name || '',
+                dept: s.dept || 'CSE'
+            }));
+            DataStore.saveSections(normalized);
+            imported.push(`${normalized.length} sections`);
+        }
+
+        this.closeModal('import');
+        this.showToast(`Imported: ${imported.join(', ')}. Generating timetable...`, 'success');
+
+        // Auto-run CSP Generator
+        setTimeout(() => {
+            this.simulateCSPGeneration();
+        }, 400);
     }
 };
 
