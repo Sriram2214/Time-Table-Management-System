@@ -2,181 +2,184 @@
 const LEGACY_CURRICULUM = {
     // ── CSE ──────────────────────────────────────────────────────────────────
     "CSE-Y1": [
-        { code: "CS101",  hours: 3 }, { code: "CS101L", hours: 4 },
-        { code: "CS102",  hours: 3 }, { code: "CS103",  hours: 3 }, { code: "CS103L", hours: 2 }
+        { code: "CS101", hours: 3 }, { code: "CS101L", hours: 4 },
+        { code: "CS102", hours: 3 }, { code: "CS103", hours: 3 }, { code: "CS103L", hours: 2 }
     ],
     "CSE-Y2": [
-        { code: "CS201",  hours: 3 }, { code: "CS201L", hours: 4 },
-        { code: "CS202",  hours: 3 }, { code: "CS203",  hours: 3 }, { code: "CS203L", hours: 2 },
-        { code: "CS204",  hours: 3 }
+        { code: "CS201", hours: 3 }, { code: "CS201L", hours: 4 },
+        { code: "CS202", hours: 3 }, { code: "CS203", hours: 3 }, { code: "CS203L", hours: 2 },
+        { code: "CS204", hours: 3 }
     ],
     "CSE-Y3": [
-        { code: "CS301",  hours: 3 }, { code: "CS301L", hours: 4 },
-        { code: "CS302",  hours: 3 }, { code: "CS302L", hours: 2 },
-        { code: "CS303",  hours: 3 }, { code: "CS304",  hours: 3 }
+        { code: "CS301", hours: 3 }, { code: "CS301L", hours: 4 },
+        { code: "CS302", hours: 3 }, { code: "CS302L", hours: 2 },
+        { code: "CS303", hours: 3 }, { code: "CS304", hours: 3 }
     ],
     "CSE-Y4": [
-        { code: "CS401",  hours: 3 }, { code: "CS401L", hours: 4 },
-        { code: "CS402",  hours: 3 }, { code: "CS403",  hours: 3 },
-        { code: "CS404",  hours: 3 }, { code: "CS404L", hours: 2 }
+        { code: "CS401", hours: 3 }, { code: "CS401L", hours: 4 },
+        { code: "CS402", hours: 3 }, { code: "CS403", hours: 3 },
+        { code: "CS404", hours: 3 }, { code: "CS404L", hours: 2 }
     ],
     // ── ECE ──────────────────────────────────────────────────────────────────
     "ECE-Y1": [
-        { code: "EC101",  hours: 3 }, { code: "EC101L", hours: 4 },
-        { code: "EC102",  hours: 3 }, { code: "EC103",  hours: 3 }
+        { code: "EC101", hours: 3 }, { code: "EC101L", hours: 4 },
+        { code: "EC102", hours: 3 }, { code: "EC103", hours: 3 }
     ],
     "ECE-Y2": [
-        { code: "EC201",  hours: 3 }, { code: "EC201L", hours: 4 },
-        { code: "EC202",  hours: 3 }, { code: "EC203",  hours: 3 }, { code: "EC203L", hours: 2 }
+        { code: "EC201", hours: 3 }, { code: "EC201L", hours: 4 },
+        { code: "EC202", hours: 3 }, { code: "EC203", hours: 3 }, { code: "EC203L", hours: 2 }
     ],
     "ECE-Y3": [
-        { code: "EC301",  hours: 3 }, { code: "EC301L", hours: 4 },
-        { code: "EC302",  hours: 3 }, { code: "EC302L", hours: 2 },
-        { code: "EC303",  hours: 3 }, { code: "EC304",  hours: 3 }
+        { code: "EC301", hours: 3 }, { code: "EC301L", hours: 4 },
+        { code: "EC302", hours: 3 }, { code: "EC302L", hours: 2 },
+        { code: "EC303", hours: 3 }, { code: "EC304", hours: 3 }
     ],
     "ECE-Y4": [
-        { code: "EC401",  hours: 3 }, { code: "EC401L", hours: 4 },
-        { code: "EC402",  hours: 3 }, { code: "EC403",  hours: 3 }, { code: "EC404",  hours: 3 }
+        { code: "EC401", hours: 3 }, { code: "EC401L", hours: 4 },
+        { code: "EC402", hours: 3 }, { code: "EC403", hours: 3 }, { code: "EC404", hours: 3 }
     ],
     // ── ME ───────────────────────────────────────────────────────────────────
     "ME-Y1": [
-        { code: "ME101",  hours: 3 }, { code: "ME102",  hours: 3 }, { code: "ME102L", hours: 2 }
+        { code: "ME101", hours: 3 }, { code: "ME102", hours: 3 }, { code: "ME102L", hours: 2 }
     ],
     "ME-Y2": [
-        { code: "ME201",  hours: 3 }, { code: "ME201L", hours: 4 },
-        { code: "ME202",  hours: 3 }, { code: "ME202L", hours: 4 }, { code: "ME203",  hours: 3 }
+        { code: "ME201", hours: 3 }, { code: "ME201L", hours: 4 },
+        { code: "ME202", hours: 3 }, { code: "ME202L", hours: 4 }, { code: "ME203", hours: 3 }
     ],
     "ME-Y3": [
-        { code: "ME301",  hours: 3 }, { code: "ME301L", hours: 4 },
-        { code: "ME302",  hours: 3 }, { code: "ME303",  hours: 3 },
-        { code: "ME304",  hours: 3 }, { code: "ME304L", hours: 2 }
+        { code: "ME301", hours: 3 }, { code: "ME301L", hours: 4 },
+        { code: "ME302", hours: 3 }, { code: "ME303", hours: 3 },
+        { code: "ME304", hours: 3 }, { code: "ME304L", hours: 2 }
     ],
     "ME-Y4": [
-        { code: "ME401",  hours: 3 }, { code: "ME401L", hours: 4 },
-        { code: "ME402",  hours: 3 }, { code: "ME403",  hours: 3 },
-        { code: "ME404",  hours: 3 }, { code: "ME404L", hours: 2 }
+        { code: "ME401", hours: 3 }, { code: "ME401L", hours: 4 },
+        { code: "ME402", hours: 3 }, { code: "ME403", hours: 3 },
+        { code: "ME404", hours: 3 }, { code: "ME404L", hours: 2 }
     ],
     // ── CE ───────────────────────────────────────────────────────────────────
     "CE-Y1": [
-        { code: "CE101",  hours: 3 }, { code: "CE102",  hours: 3 }, { code: "CE102L", hours: 2 }
+        { code: "CE101", hours: 3 }, { code: "CE102", hours: 3 }, { code: "CE102L", hours: 2 }
     ],
     "CE-Y2": [
-        { code: "CE201",  hours: 3 }, { code: "CE201L", hours: 4 },
-        { code: "CE202",  hours: 3 }, { code: "CE203",  hours: 3 }, { code: "CE203L", hours: 2 }
+        { code: "CE201", hours: 3 }, { code: "CE201L", hours: 4 },
+        { code: "CE202", hours: 3 }, { code: "CE203", hours: 3 }, { code: "CE203L", hours: 2 }
     ],
     "CE-Y3": [
-        { code: "CE301",  hours: 3 }, { code: "CE301L", hours: 4 },
-        { code: "CE302",  hours: 3 }, { code: "CE302L", hours: 2 },
-        { code: "CE303",  hours: 3 }, { code: "CE304",  hours: 3 }
+        { code: "CE301", hours: 3 }, { code: "CE301L", hours: 4 },
+        { code: "CE302", hours: 3 }, { code: "CE302L", hours: 2 },
+        { code: "CE303", hours: 3 }, { code: "CE304", hours: 3 }
     ],
     "CE-Y4": [
-        { code: "CE401",  hours: 3 }, { code: "CE401L", hours: 4 },
-        { code: "CE402",  hours: 3 }, { code: "CE403",  hours: 3 }, { code: "CE404",  hours: 3 }
+        { code: "CE401", hours: 3 }, { code: "CE401L", hours: 4 },
+        { code: "CE402", hours: 3 }, { code: "CE403", hours: 3 }, { code: "CE404", hours: 3 }
     ],
     // ── EEE ──────────────────────────────────────────────────────────────────
     "EEE-Y1": [
-        { code: "EE101",  hours: 3 }, { code: "EE101L", hours: 4 }, { code: "EE102",  hours: 3 }
+        { code: "EE101", hours: 3 }, { code: "EE101L", hours: 4 }, { code: "EE102", hours: 3 }
     ],
     "EEE-Y2": [
-        { code: "EE201",  hours: 3 }, { code: "EE202",  hours: 3 },
-        { code: "EE202L", hours: 4 }, { code: "EE203",  hours: 3 }
+        { code: "EE201", hours: 3 }, { code: "EE202", hours: 3 },
+        { code: "EE202L", hours: 4 }, { code: "EE203", hours: 3 }
     ],
     "EEE-Y3": [
-        { code: "EE301",  hours: 3 }, { code: "EE301L", hours: 4 },
-        { code: "EE302",  hours: 3 }, { code: "EE302L", hours: 2 },
-        { code: "EE303",  hours: 3 }, { code: "EE304",  hours: 3 }
+        { code: "EE301", hours: 3 }, { code: "EE301L", hours: 4 },
+        { code: "EE302", hours: 3 }, { code: "EE302L", hours: 2 },
+        { code: "EE303", hours: 3 }, { code: "EE304", hours: 3 }
     ],
     "EEE-Y4": [
-        { code: "EE401",  hours: 3 }, { code: "EE401L", hours: 4 },
-        { code: "EE402",  hours: 3 }, { code: "EE402L", hours: 2 },
-        { code: "EE403",  hours: 3 }, { code: "EE404",  hours: 3 }
+        { code: "EE401", hours: 3 }, { code: "EE401L", hours: 4 },
+        { code: "EE402", hours: 3 }, { code: "EE402L", hours: 2 },
+        { code: "EE403", hours: 3 }, { code: "EE404", hours: 3 }
     ],
     // ── IT ───────────────────────────────────────────────────────────────────
     "IT-Y1": [
-        { code: "IT101",  hours: 3 }, { code: "IT101L", hours: 4 },
-        { code: "IT102",  hours: 3 }, { code: "IT103",  hours: 3 }
+        { code: "IT101", hours: 3 }, { code: "IT101L", hours: 4 },
+        { code: "IT102", hours: 3 }, { code: "IT103", hours: 3 }
     ],
     "IT-Y2": [
-        { code: "IT201",  hours: 3 }, { code: "IT201L", hours: 4 },
-        { code: "IT202",  hours: 3 }, { code: "IT202L", hours: 2 }, { code: "IT203", hours: 3 }
+        { code: "IT201", hours: 3 }, { code: "IT201L", hours: 4 },
+        { code: "IT202", hours: 3 }, { code: "IT202L", hours: 2 }, { code: "IT203", hours: 3 }
     ],
     "IT-Y3": [
-        { code: "IT301",  hours: 3 }, { code: "IT301L", hours: 4 },
-        { code: "IT302",  hours: 3 }, { code: "IT302L", hours: 2 }, { code: "IT303", hours: 3 }
+        { code: "IT301", hours: 3 }, { code: "IT301L", hours: 4 },
+        { code: "IT302", hours: 3 }, { code: "IT302L", hours: 2 }, { code: "IT303", hours: 3 }
     ],
     "IT-Y4": [
-        { code: "IT401",  hours: 3 }, { code: "IT401L", hours: 4 },
-        { code: "IT402",  hours: 3 }, { code: "IT402L", hours: 2 },
-        { code: "IT403",  hours: 3 }, { code: "IT404",  hours: 3 }
+        { code: "IT401", hours: 3 }, { code: "IT401L", hours: 4 },
+        { code: "IT402", hours: 3 }, { code: "IT402L", hours: 2 },
+        { code: "IT403", hours: 3 }, { code: "IT404", hours: 3 }
     ],
     // ── AIDS ─────────────────────────────────────────────────────────────────
     "AIDS-Y1": [
-        { code: "AD101",  hours: 3 }, { code: "AD101L", hours: 4 },
-        { code: "AD102",  hours: 3 }, { code: "AD103",  hours: 3 }
+        { code: "AD101", hours: 3 }, { code: "AD101L", hours: 4 },
+        { code: "AD102", hours: 3 }, { code: "AD103", hours: 3 }
     ],
     "AIDS-Y2": [
-        { code: "AD201",  hours: 3 }, { code: "AD201L", hours: 4 },
-        { code: "AD202",  hours: 3 }, { code: "AD202L", hours: 2 }, { code: "AD203", hours: 3 }
+        { code: "AD201", hours: 3 }, { code: "AD201L", hours: 4 },
+        { code: "AD202", hours: 3 }, { code: "AD202L", hours: 2 }, { code: "AD203", hours: 3 }
     ],
     "AIDS-Y3": [
-        { code: "AD301",  hours: 3 }, { code: "AD301L", hours: 4 },
-        { code: "AD302",  hours: 3 }, { code: "AD302L", hours: 2 }, { code: "AD303", hours: 3 }
+        { code: "AD301", hours: 3 }, { code: "AD301L", hours: 4 },
+        { code: "AD302", hours: 3 }, { code: "AD302L", hours: 2 }, { code: "AD303", hours: 3 }
     ],
     "AIDS-Y4": [
-        { code: "AD401",  hours: 3 }, { code: "AD401L", hours: 4 },
-        { code: "AD402",  hours: 3 }, { code: "AD402L", hours: 2 },
-        { code: "AD403",  hours: 3 }, { code: "AD404",  hours: 3 }
+        { code: "AD401", hours: 3 }, { code: "AD401L", hours: 4 },
+        { code: "AD402", hours: 3 }, { code: "AD402L", hours: 2 },
+        { code: "AD403", hours: 3 }, { code: "AD404", hours: 3 }
     ],
     // ── CHEM ─────────────────────────────────────────────────────────────────
-    "CHEM-Y1": [
-        { code: "CH101",  hours: 3 }, { code: "CH101L", hours: 4 },
-        { code: "CH102",  hours: 3 }, { code: "CH103",  hours: 3 }
+    "AIML-Y1": [
+        { code: "AM101", hours: 3 }, { code: "AM101L", hours: 4 },
+        { code: "AM102", hours: 3 }, { code: "AM103", hours: 3 }
     ],
-    "CHEM-Y2": [
-        { code: "CH201",  hours: 3 }, { code: "CH201L", hours: 4 },
-        { code: "CH202",  hours: 3 }, { code: "CH202L", hours: 2 }, { code: "CH203", hours: 3 }
+    "AIML-Y2": [
+        { code: "AM201", hours: 3 }, { code: "AM201L", hours: 4 },
+        { code: "AM202", hours: 3 }, { code: "AM202L", hours: 2 }, { code: "AM203", hours: 3 }
     ],
-    "CHEM-Y3": [
-        { code: "CH301",  hours: 3 }, { code: "CH301L", hours: 4 },
-        { code: "CH302",  hours: 3 }, { code: "CH302L", hours: 2 }, { code: "CH303", hours: 3 }
+    "AIML-Y3": [
+        { code: "AM301", hours: 3 }, { code: "AM301L", hours: 4 },
+        { code: "AM302", hours: 3 }, { code: "AM302L", hours: 2 }, { code: "AM303", hours: 3 }
     ],
-    "CHEM-Y4": [
-        { code: "CH401",  hours: 3 }, { code: "CH401L", hours: 4 },
-        { code: "CH402",  hours: 3 }, { code: "CH403",  hours: 3 }, { code: "CH404", hours: 3 }
+    "AIML-Y4": [
+        { code: "AM401", hours: 3 }, { code: "AM401L", hours: 4 },
+        { code: "AM402", hours: 3 }, { code: "AM402L", hours: 2 },
+        { code: "AM403", hours: 3 }, { code: "AM404", hours: 3 }
     ],
-    // ── BME ──────────────────────────────────────────────────────────────────
-    "BME-Y1": [
-        { code: "BM101",  hours: 3 }, { code: "BM101L", hours: 4 },
-        { code: "BM102",  hours: 3 }, { code: "BM103",  hours: 3 }
+    // ── CYS ──────────────────────────────────────────────────────────────────
+    "CYS-Y1": [
+        { code: "CY101", hours: 3 }, { code: "CY101L", hours: 4 },
+        { code: "CY102", hours: 3 }, { code: "CY103", hours: 3 }
     ],
-    "BME-Y2": [
-        { code: "BM201",  hours: 3 }, { code: "BM201L", hours: 4 },
-        { code: "BM202",  hours: 3 }, { code: "BM202L", hours: 2 }, { code: "BM203", hours: 3 }
+    "CYS-Y2": [
+        { code: "CY201", hours: 3 }, { code: "CY201L", hours: 4 },
+        { code: "CY202", hours: 3 }, { code: "CY202L", hours: 2 }, { code: "CY203", hours: 3 }
     ],
-    "BME-Y3": [
-        { code: "BM301",  hours: 3 }, { code: "BM301L", hours: 4 },
-        { code: "BM302",  hours: 3 }, { code: "BM302L", hours: 2 }, { code: "BM303", hours: 3 }
+    "CYS-Y3": [
+        { code: "CY301", hours: 3 }, { code: "CY301L", hours: 4 },
+        { code: "CY302", hours: 3 }, { code: "CY302L", hours: 2 }, { code: "CY303", hours: 3 }
     ],
-    "BME-Y4": [
-        { code: "BM401",  hours: 3 }, { code: "BM401L", hours: 4 },
-        { code: "BM402",  hours: 3 }, { code: "BM403",  hours: 3 }, { code: "BM404", hours: 3 }
+    "CYS-Y4": [
+        { code: "CY401", hours: 3 }, { code: "CY401L", hours: 4 },
+        { code: "CY402", hours: 3 }, { code: "CY402L", hours: 2 },
+        { code: "CY403", hours: 3 }, { code: "CY404", hours: 3 }
     ],
-    // ── AERO ─────────────────────────────────────────────────────────────────
-    "AERO-Y1": [
-        { code: "AE101",  hours: 3 }, { code: "AE101L", hours: 4 },
-        { code: "AE102",  hours: 3 }, { code: "AE103",  hours: 3 }
+    // ── IOT ──────────────────────────────────────────────────────────────────
+    "IOT-Y1": [
+        { code: "IO101", hours: 3 }, { code: "IO101L", hours: 4 },
+        { code: "IO102", hours: 3 }, { code: "IO103", hours: 3 }
     ],
-    "AERO-Y2": [
-        { code: "AE201",  hours: 3 }, { code: "AE201L", hours: 4 },
-        { code: "AE202",  hours: 3 }, { code: "AE202L", hours: 2 }, { code: "AE203", hours: 3 }
+    "IOT-Y2": [
+        { code: "IO201", hours: 3 }, { code: "IO201L", hours: 4 },
+        { code: "IO202", hours: 3 }, { code: "IO202L", hours: 2 }, { code: "IO203", hours: 3 }
     ],
-    "AERO-Y3": [
-        { code: "AE301",  hours: 3 }, { code: "AE301L", hours: 4 },
-        { code: "AE302",  hours: 3 }, { code: "AE302L", hours: 2 }, { code: "AE303", hours: 3 }
+    "IOT-Y3": [
+        { code: "IO301", hours: 3 }, { code: "IO301L", hours: 4 },
+        { code: "IO302", hours: 3 }, { code: "IO302L", hours: 2 }, { code: "IO303", hours: 3 }
     ],
-    "AERO-Y4": [
-        { code: "AE401",  hours: 3 }, { code: "AE401L", hours: 4 },
-        { code: "AE402",  hours: 3 }, { code: "AE403",  hours: 3 }, { code: "AE404", hours: 3 }
+    "IOT-Y4": [
+        { code: "IO401", hours: 3 }, { code: "IO401L", hours: 4 },
+        { code: "IO402", hours: 3 }, { code: "IO402L", hours: 2 },
+        { code: "IO403", hours: 3 }, { code: "IO404", hours: 3 }
     ]
 };
 
@@ -243,9 +246,9 @@ const TimetableGenerator = {
 
     // ── Main Generate Function ────────────────────────────────────────────────
     generate() {
-        const staff    = DataStore.getStaff();
+        const staff = DataStore.getStaff();
         const subjects = DataStore.getSubjects();
-        const rooms    = DataStore.getRooms();
+        const rooms = DataStore.getRooms();
         const sections = DataStore.getSections();
 
         // Auto-create rooms if none exist for custom data
@@ -292,19 +295,19 @@ const TimetableGenerator = {
         sessionsToSchedule.sort((a, b) => b.duration - a.duration);
 
         // 2. Initialize tracking structures
-        const teacherSchedule     = {};
-        const roomSchedule        = {};
-        const sectionSchedule     = {};
+        const teacherSchedule = {};
+        const roomSchedule = {};
+        const sectionSchedule = {};
         const sectionDailySubjects = {};
-        const teacherWeeklyHours  = {};
+        const teacherWeeklyHours = {};
 
         staff.forEach(s => {
-            teacherSchedule[s.id]    = new Set();
+            teacherSchedule[s.id] = new Set();
             teacherWeeklyHours[s.id] = 0;
         });
         effectiveRooms.forEach(r => { roomSchedule[r.name] = new Set(); });
         sections.forEach(sec => {
-            sectionSchedule[sec.id]      = new Set();
+            sectionSchedule[sec.id] = new Set();
             sectionDailySubjects[sec.id] = {};
             WORKING_DAYS.forEach(day => {
                 sectionDailySubjects[sec.id][day] = new Set();
@@ -313,20 +316,26 @@ const TimetableGenerator = {
 
         const scheduledSlots = [];
 
+        let iterations = 0;
+        const MAX_ITERATIONS = 50000;
+
         // 3. Greedy + Backtracking CSP Solver
         function solve(index) {
+            iterations++;
+            if (iterations > MAX_ITERATIONS) return false;
+
             if (index >= sessionsToSchedule.length) return true;
 
             const session = sessionsToSchedule[index];
             const subCode = session.subjectCode;
-            const sub     = subjects.find(s => s.code === subCode);
+            const sub = subjects.find(s => s.code === subCode);
 
             // Find qualified teachers — support imported data where subjects may be empty arrays
             let qualifiedTeachers = staff.filter(t =>
                 !t.isAbsent &&
                 (t.subjects.includes(subCode) ||
-                 t.dept === session.dept ||  // dept match fallback
-                 t.subjects.length === 0)    // teacher with no restrictions = can teach any
+                    t.dept === session.dept ||  // dept match fallback
+                    t.subjects.length === 0)    // teacher with no restrictions = can teach any
             );
 
             // Sort by current workload ascending (load balancing)
@@ -366,10 +375,10 @@ const TimetableGenerator = {
                                 session.sectionId.toLowerCase().includes("y1") ||
                                 session.sectionId.includes("1st");
                             periodChoices = isFirstYear
-                                ? [[0,1],[1,2],[2,3],[3,4],[5,6],[6,7]]
-                                : [[0,1],[2,3],[4,5],[5,6],[6,7]];
+                                ? [[0, 1], [1, 2], [2, 3], [3, 4], [5, 6], [6, 7]]
+                                : [[0, 1], [2, 3], [4, 5], [5, 6], [6, 7]];
                         } else {
-                            periodChoices = [[0],[1],[2],[3],[4],[5],[6],[7]];
+                            periodChoices = [[0], [1], [2], [3], [4], [5], [6], [7]];
                         }
 
                         for (let pIndex = 0; pIndex < periodChoices.length; pIndex++) {
@@ -510,7 +519,7 @@ const TimetableGenerator = {
                     if (placed) break;
                     for (const day of WORKING_DAYS) {
                         if (placed) break;
-                        const periodChoices = session.duration === 2 ? [[0,1],[2,3],[5,6]] : [[0],[1],[2],[3],[4],[5],[6],[7]];
+                        const periodChoices = session.duration === 2 ? [[0, 1], [2, 3], [5, 6]] : [[0], [1], [2], [3], [4], [5], [6], [7]];
                         for (const periods of periodChoices) {
                             let fits = true;
                             if (session.duration === 1 && sectionDailySubjects[session.sectionId][day].has(subCode)) fits = false;
@@ -580,7 +589,7 @@ const TimetableGenerator = {
     validateSchedule(schedule) {
         const errors = [];
         const teacherSlots = {};
-        const roomSlots    = {};
+        const roomSlots = {};
         const sectionSlots = {};
 
         schedule.forEach(slot => {
@@ -613,10 +622,5 @@ const TimetableGenerator = {
         });
 
         return { hasConflict: errors.length > 0, errors };
-    }
-        return {
-            hasConflict: errors.length > 0,
-            errors: errors
-        };
     }
 };

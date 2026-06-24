@@ -191,17 +191,31 @@
                             <option value="section">Class Section</option>
                             <option value="teacher">Staff Member</option>
                             <option value="room">Physical Room</option>
-                            <option value="year-dept">Year & Department</option>
                         </select>
 
-                        <label for="filter-view-value" style="font-size: 0.85rem; font-weight: 600;">Selection:</label>
+                        <!-- Original View Selection Dropdown -->
+                        <label for="filter-view-value" id="filter-view-value-label" style="font-size: 0.85rem; font-weight: 600; margin-left: 8px;">Selection:</label>
                         <select class="select-input" id="filter-view-value">
                             <!-- Populated dynamically -->
                         </select>
 
+                        <!-- Original Department Dropdown -->
                         <label for="filter-dept-value" id="filter-dept-label" style="font-size: 0.85rem; font-weight: 600; display: none; margin-left: 8px;">Department:</label>
                         <select class="select-input" id="filter-dept-value" style="display: none;">
                             <!-- Populated dynamically -->
+                        </select>
+
+                        <!-- Hierarchical Section Filters -->
+                        <label for="filter-hier-year" id="filter-hier-year-label" style="font-size: 0.85rem; font-weight: 600; display: none; margin-left: 8px;">Year:</label>
+                        <select class="select-input" id="filter-hier-year" style="display: none;">
+                        </select>
+
+                        <label for="filter-hier-dept" id="filter-hier-dept-label" style="font-size: 0.85rem; font-weight: 600; display: none; margin-left: 8px;">Department:</label>
+                        <select class="select-input" id="filter-hier-dept" style="display: none;">
+                        </select>
+
+                        <label for="filter-hier-section" id="filter-hier-section-label" style="font-size: 0.85rem; font-weight: 600; display: none; margin-left: 8px;">Section:</label>
+                        <select class="select-input" id="filter-hier-section" style="display: none;">
                         </select>
                     </div>
                     
@@ -228,9 +242,18 @@
             <section id="staff-panel" class="panel">
                 <div class="action-bar">
                     <input type="text" class="search-input" id="staff-search" placeholder="Search staff by name or dept...">
-                    <button class="btn btn-primary" id="add-staff-btn">
-                        <i data-lucide="user-plus"></i> Add New Staff
-                    </button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" id="clear-staff-btn" style="color: hsl(0, 80%, 60%); border-color: hsl(0, 80%, 60%);">
+                            <i data-lucide="trash-2"></i> Clear All
+                        </button>
+                        <input type="file" id="import-staff-csv-input" accept=".csv,.xlsx,.xls" style="display:none;">
+                        <button class="btn btn-secondary" id="import-staff-btn">
+                            <i data-lucide="upload"></i> Import CSV/Excel
+                        </button>
+                        <button class="btn btn-primary" id="add-staff-btn">
+                            <i data-lucide="user-plus"></i> Add New Staff
+                        </button>
+                    </div>
                 </div>
 
                 <div class="data-table-container">
@@ -391,10 +414,15 @@
                             <label for="staff-form-dept">Department</label>
                             <select class="select-input" id="staff-form-dept">
                                 <option value="CSE">CSE</option>
+                                <option value="IT">IT</option>
+                                <option value="AIDS">AIDS</option>
+                                <option value="AIML">AIML</option>
+                                <option value="Cyber Security">Cyber Security</option>
+                                <option value="IoT">IoT</option>
                                 <option value="ECE">ECE</option>
-                                <option value="ME">ME</option>
-                                <option value="CE">CE</option>
                                 <option value="EEE">EEE</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Civil">Civil</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -443,10 +471,15 @@
                             <label for="subject-form-dept">Department</label>
                             <select class="select-input" id="subject-form-dept">
                                 <option value="CSE">CSE</option>
+                                <option value="IT">IT</option>
+                                <option value="AIDS">AIDS</option>
+                                <option value="AIML">AIML</option>
+                                <option value="Cyber Security">Cyber Security</option>
+                                <option value="IoT">IoT</option>
                                 <option value="ECE">ECE</option>
-                                <option value="ME">ME</option>
-                                <option value="CE">CE</option>
                                 <option value="EEE">EEE</option>
+                                <option value="Mechanical">Mechanical</option>
+                                <option value="Civil">Civil</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -614,16 +647,16 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="import-modal-cancel">Cancel</button>
                 <button class="btn btn-primary" id="import-modal-confirm" disabled style="opacity:0.5;">
-                    <i data-lucide="sparkles"></i> Import &amp; Auto-Generate Timetable
+                    <i data-lucide="check"></i> Import Data
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Core App Logic Scripts -->
-    <script src="data.js"></script>
-    <script src="generator.js"></script>
-    <script src="absence.js"></script>
-    <script src="app.js"></script>
+    <script src="data.js?v=12"></script>
+    <script src="generator.js?v=12"></script>
+    <script src="absence.js?v=12"></script>
+    <script src="app.js?v=12"></script>
 </body>
 </html>

@@ -101,6 +101,29 @@ const app = {
             this.renderTimetableGrid();
         });
 
+        const hierYear = document.getElementById('filter-hier-year');
+        if (hierYear) {
+            hierYear.addEventListener('change', () => {
+                this.populateHierarchicalDept();
+                this.renderTimetableGrid();
+            });
+        }
+
+        const hierDept = document.getElementById('filter-hier-dept');
+        if (hierDept) {
+            hierDept.addEventListener('change', () => {
+                this.populateHierarchicalSection();
+                this.renderTimetableGrid();
+            });
+        }
+
+        const hierSection = document.getElementById('filter-hier-section');
+        if (hierSection) {
+            hierSection.addEventListener('change', () => {
+                this.renderTimetableGrid();
+            });
+        }
+
         // Staff search
         document.getElementById('staff-search').addEventListener('input', (e) => {
             this.renderStaffTable(e.target.value);
@@ -109,6 +132,24 @@ const app = {
         // Subject search
         document.getElementById('subject-search').addEventListener('input', (e) => {
             this.renderSubjectTable(e.target.value);
+        });
+
+        // Import Staff CSV/Excel Trigger
+        document.getElementById('import-staff-btn').addEventListener('click', () => {
+            document.getElementById('import-staff-csv-input').click();
+        });
+
+        document.getElementById('import-staff-csv-input').addEventListener('change', (e) => {
+            this.handleDirectStaffImport(e);
+        });
+
+        // Clear All Staff Trigger
+        document.getElementById('clear-staff-btn').addEventListener('click', () => {
+            if (confirm("Are you sure you want to delete ALL staff members? This cannot be undone.")) {
+                DataStore.saveStaff([]);
+                this.renderStaffDirectory();
+                this.showToast("All staff members have been deleted.", "success");
+            }
         });
 
         // Add Staff Modal Trigger
@@ -211,61 +252,196 @@ const app = {
 
         if (schedule.length > 0) {
             chkStatus.className = "checklist-item done";
-            chkStatus.querySelector('i').setAttribute('data-lucide', 'check-circle-2');
+            chkStatus.querySelector('i, svg').setAttribute('data-lucide', 'check-circle-2');
             chkText.innerText = "Conflict-free Timetable successfully generated.";
             
             chkBackup.className = "checklist-item done";
-            chkBackup.querySelector('i').setAttribute('data-lucide', 'check-circle-2');
+            chkBackup.querySelector('i, svg').setAttribute('data-lucide', 'check-circle-2');
             chkBackupText.innerText = `Backup staff coverage calculated: ${coverageRate}% coverage.`;
         } else {
             chkStatus.className = "checklist-item pending";
-            chkStatus.querySelector('i').setAttribute('data-lucide', 'help-circle');
+            chkStatus.querySelector('i, svg').setAttribute('data-lucide', 'help-circle');
             chkText.innerText = "Timetable needs generation for the current semester.";
 
             chkBackup.className = "checklist-item pending";
-            chkBackup.querySelector('i').setAttribute('data-lucide', 'help-circle');
+            chkBackup.querySelector('i, svg').setAttribute('data-lucide', 'help-circle');
             chkBackupText.innerText = "Backup staff allocations will be computed during generation.";
+        }
+    },
+
+    getYearFromSection(sec) {
+        const match = sec.name.match(/\d+(?:st|nd|rd|th)\s+Year/i);
+        if (match) {
+            return match[0];
+        } else {
+            const idMatch = sec.id.match(/-Y(\d+)/i);
+            if (idMatch) {
+                const num = idMatch[1];
+                const suffix = num === '1' ? 'st' : num === '2' ? 'nd' : num === '3' ? 'rd' : 'th';
+                return `${num}${suffix} Year`;
+            }
+        }
+        return null;
+    },
+
+    populateHierarchicalYear() {
+        const hierYear = document.getElementById('filter-hier-year');
+        const prevYear = hierYear.value;
+        hierYear.innerHTML = '<option value="">-- Select Year --</option>';
+        
+        const sections = DataStore.getSections();
+        const years = new Set();
+        sections.forEach(sec => {
+            const year = this.getYearFromSection(sec);
+            if (year) years.add(year);
+        });
+        
+        const sortedYears = Array.from(years).sort();
+        sortedYears.forEach(year => {
+            const opt = document.createElement('option');
+            opt.value = year;
+            opt.innerText = year;
+            hierYear.appendChild(opt);
+        });
+
+        if (prevYear && Array.from(hierYear.options).some(opt => opt.value === prevYear)) {
+            hierYear.value = prevYear;
+        } else {
+            document.getElementById('filter-hier-dept-label').style.display = 'none';
+            document.getElementById('filter-hier-dept').style.display = 'none';
+            document.getElementById('filter-hier-section-label').style.display = 'none';
+            document.getElementById('filter-hier-section').style.display = 'none';
+        }
+        
+        this.populateHierarchicalDept();
+    },
+
+    populateHierarchicalDept() {
+        const hierYear = document.getElementById('filter-hier-year').value;
+        const hierDeptLabel = document.getElementById('filter-hier-dept-label');
+        const hierDept = document.getElementById('filter-hier-dept');
+        
+        if (!hierYear) {
+            hierDeptLabel.style.display = 'none';
+            hierDept.style.display = 'none';
+            document.getElementById('filter-hier-section-label').style.display = 'none';
+            document.getElementById('filter-hier-section').style.display = 'none';
+            return;
+        }
+
+        hierDeptLabel.style.display = 'inline-block';
+        hierDept.style.display = 'inline-block';
+        
+        const prevDept = hierDept.value;
+        hierDept.innerHTML = '<option value="">-- Select Department --</option>';
+        
+        const sections = DataStore.getSections();
+        const depts = new Set();
+        sections.forEach(sec => {
+            if (this.getYearFromSection(sec) === hierYear) {
+                depts.add(sec.dept);
+            }
+        });
+        
+        const sortedDepts = Array.from(depts).sort();
+        sortedDepts.forEach(dept => {
+            const opt = document.createElement('option');
+            opt.value = dept;
+            opt.innerText = dept;
+            hierDept.appendChild(opt);
+        });
+
+        if (prevDept && Array.from(hierDept.options).some(opt => opt.value === prevDept)) {
+            hierDept.value = prevDept;
+        } else {
+            document.getElementById('filter-hier-section-label').style.display = 'none';
+            document.getElementById('filter-hier-section').style.display = 'none';
+        }
+        
+        this.populateHierarchicalSection();
+    },
+
+    populateHierarchicalSection() {
+        const hierYear = document.getElementById('filter-hier-year').value;
+        const hierDept = document.getElementById('filter-hier-dept').value;
+        const hierSectionLabel = document.getElementById('filter-hier-section-label');
+        const hierSection = document.getElementById('filter-hier-section');
+        
+        if (!hierYear || !hierDept) {
+            hierSectionLabel.style.display = 'none';
+            hierSection.style.display = 'none';
+            return;
+        }
+
+        hierSectionLabel.style.display = 'inline-block';
+        hierSection.style.display = 'inline-block';
+        
+        const prevSec = hierSection.value;
+        hierSection.innerHTML = '<option value="">-- Select Section --</option>';
+        
+        const sections = DataStore.getSections().filter(sec => 
+            this.getYearFromSection(sec) === hierYear && sec.dept === hierDept
+        );
+        
+        sections.forEach(sec => {
+            const opt = document.createElement('option');
+            opt.value = sec.id;
+            opt.innerText = sec.name;
+            hierSection.appendChild(opt);
+        });
+
+        if (prevSec && Array.from(hierSection.options).some(opt => opt.value === prevSec)) {
+            hierSection.value = prevSec;
+        } else if (sections.length > 0) {
+            hierSection.value = sections[0].id;
         }
     },
 
     populateFilterValues() {
         const viewType = document.getElementById('filter-view-type').value;
         const selectValue = document.getElementById('filter-view-value');
+        const selectValueLabel = document.getElementById('filter-view-value-label');
         const deptLabel = document.getElementById('filter-dept-label');
         const deptValue = document.getElementById('filter-dept-value');
         const prevSelected = selectValue.value;
         
+        const hierYearLabel = document.getElementById('filter-hier-year-label');
+        const hierYear = document.getElementById('filter-hier-year');
+        const hierDeptLabel = document.getElementById('filter-hier-dept-label');
+        const hierDept = document.getElementById('filter-hier-dept');
+        const hierSectionLabel = document.getElementById('filter-hier-section-label');
+        const hierSection = document.getElementById('filter-hier-section');
+
         selectValue.innerHTML = "";
 
-        // Show/hide department filter based on viewType
-        if (viewType === 'year-dept') {
-            if (deptLabel) deptLabel.style.display = 'inline-block';
-            if (deptValue) {
-                deptValue.style.display = 'inline-block';
-                if (deptValue.innerHTML === "") {
-                    deptValue.innerHTML = '<option value="all">All Departments</option>';
-                    DEFAULT_DEPARTMENTS.forEach(d => {
-                        const opt = document.createElement('option');
-                        opt.value = d;
-                        opt.innerText = d;
-                        deptValue.appendChild(opt);
-                    });
-                }
-            }
-        } else {
+        if (viewType === 'section') {
+            if (selectValueLabel) selectValueLabel.style.display = 'none';
+            if (selectValue) selectValue.style.display = 'none';
             if (deptLabel) deptLabel.style.display = 'none';
             if (deptValue) deptValue.style.display = 'none';
+
+            if (hierYearLabel) hierYearLabel.style.display = 'inline-block';
+            if (hierYear) hierYear.style.display = 'inline-block';
+            
+            this.populateHierarchicalYear();
+            return;
+        } else {
+            if (selectValueLabel) selectValueLabel.style.display = 'inline-block';
+            if (selectValue) selectValue.style.display = 'inline-block';
+            
+            if (hierYearLabel) hierYearLabel.style.display = 'none';
+            if (hierYear) hierYear.style.display = 'none';
+            if (hierDeptLabel) hierDeptLabel.style.display = 'none';
+            if (hierDept) hierDept.style.display = 'none';
+            if (hierSectionLabel) hierSectionLabel.style.display = 'none';
+            if (hierSection) hierSection.style.display = 'none';
         }
 
-        if (viewType === 'section') {
-            const sections = DataStore.getSections();
-            sections.forEach(sec => {
-                const opt = document.createElement('option');
-                opt.value = sec.id;
-                opt.innerText = sec.name;
-                selectValue.appendChild(opt);
-            });
-        } else if (viewType === 'teacher') {
+        // Hide department filter for all other views
+        if (deptLabel) deptLabel.style.display = 'none';
+        if (deptValue) deptValue.style.display = 'none';
+
+        if (viewType === 'teacher') {
             const staff = DataStore.getStaff();
             staff.forEach(s => {
                 const opt = document.createElement('option');
@@ -281,29 +457,6 @@ const app = {
                 opt.innerText = `${r.name} (${r.type})`;
                 selectValue.appendChild(opt);
             });
-        } else if (viewType === 'year-dept') {
-            const sections = DataStore.getSections();
-            const years = new Set();
-            sections.forEach(sec => {
-                const match = sec.name.match(/\d+(?:st|nd|rd|th)\s+Year/i);
-                if (match) {
-                    years.add(match[0]);
-                } else {
-                    const idMatch = sec.id.match(/-Y(\d+)/i);
-                    if (idMatch) {
-                        const num = idMatch[1];
-                        const suffix = num === '1' ? 'st' : num === '2' ? 'nd' : num === '3' ? 'rd' : 'th';
-                        years.add(`${num}${suffix} Year`);
-                    }
-                }
-            });
-            const sortedYears = Array.from(years).sort();
-            sortedYears.forEach(year => {
-                const opt = document.createElement('option');
-                opt.value = year;
-                opt.innerText = year;
-                selectValue.appendChild(opt);
-            });
         }
 
         // Restore selection if possible, otherwise default to first
@@ -314,8 +467,20 @@ const app = {
 
     renderTimetableGrid() {
         const viewType = document.getElementById('filter-view-type').value;
-        const viewVal = document.getElementById('filter-view-value').value;
+        let viewVal = document.getElementById('filter-view-value').value;
         const wrapper = document.getElementById('timetable-view-wrapper');
+
+        if (viewType === 'section') {
+            const hierYear = document.getElementById('filter-hier-year').value;
+            const hierDept = document.getElementById('filter-hier-dept').value;
+            const hierSection = document.getElementById('filter-hier-section').value;
+            
+            if (!hierYear || !hierDept || !hierSection) {
+                wrapper.innerHTML = `<p style="color: hsl(var(--text-muted)); text-align: center; margin-top: 40px;">Please select Year, Department, and Section to view the timetable.</p>`;
+                return;
+            }
+            viewVal = hierSection;
+        }
 
         if (!viewVal) {
             wrapper.innerHTML = `<p style="color: hsl(var(--text-muted)); text-align: center; margin-top: 40px;">No schedule generated. Click "Run CSP Generator" above.</p>`;
@@ -326,89 +491,7 @@ const app = {
         const staff = DataStore.getStaff();
         const subjects = DataStore.getSubjects();
 
-        if (viewType === 'year-dept') {
-            const selectedDept = document.getElementById('filter-dept-value').value;
-            const sections = DataStore.getSections();
-            const yearSections = sections.filter(sec => sec.name.toLowerCase().includes(viewVal.toLowerCase()));
-            const targetSections = selectedDept === 'all' 
-                ? yearSections 
-                : yearSections.filter(sec => sec.dept === selectedDept);
 
-            if (targetSections.length === 0) {
-                wrapper.innerHTML = `<p style="color: hsl(var(--text-muted)); text-align: center; margin-top: 40px;">No sections found for ${viewVal} in Department: ${selectedDept}.</p>`;
-                return;
-            }
-
-            wrapper.innerHTML = targetSections.map(sec => {
-                const slotsToUse = getSlotsForSection(sec.id);
-                return `
-                    <div class="timetable-section-wrapper" style="margin-bottom: 40px;">
-                        <h3 style="margin-bottom: 12px; font-size: 1.1rem; color: hsl(var(--primary)); border-left: 4px solid hsl(var(--primary)); padding-left: 10px; font-weight: 700;">
-                            ${sec.name} Timetable
-                        </h3>
-                        <div class="timetable-container">
-                            <div class="timetable-grid">
-                                <div class="grid-header">Slots</div>
-                                ${WORKING_DAYS.map(day => `<div class="grid-header day-header">${day}</div>`).join('')}
-                                
-                                ${slotsToUse.map(slot => {
-                                    let timeText = slot.time;
-                                    let html = `<div class="time-col"><span>${slot.label}</span><span style="font-size:0.7rem; line-height:1.2; text-align:center; margin-top:4px;">${timeText}</span></div>`;
-                                    
-                                    WORKING_DAYS.forEach(day => {
-                                        let match = schedule.find(s => s.sectionId === sec.id && s.day === day && s.period === slot.period);
-                                        if (match) {
-                                            const sub = subjects.find(s => s.code === match.subjectCode);
-                                            const teacher = staff.find(t => t.id === match.teacherId);
-                                            const backup = staff.find(t => t.id === match.backupTeacherId);
-                                            const currentT = staff.find(t => t.id === match.currentTeacherId);
-
-                                            const isSubbed = match.isSubstituted;
-                                            const subClass = isSubbed ? 'substituted' : '';
-                                            
-                                            const backupText = backup ? `Backup: ${backup.name}` : 'Backup: None';
-                                            const teacherName = teacher ? teacher.name : match.teacherId;
-                                            const currentTeacherName = currentT ? currentT.name : match.currentTeacherId;
-
-                                            const indicatorColor = match.backupTeacherId ? 'green' : 'red';
-                                            const badgeTooltip = match.backupTeacherId ? 'Backup pre-allocated' : 'No free backup available!';
-                                            
-                                            const exactTime = slotsToUse[match.period].time;
-
-                                            html += `
-                                                <div class="schedule-cell ${subClass}" onclick="app.openSlotModal('${match.id}')">
-                                                    <div class="cell-subject">
-                                                        <span>${match.subjectCode}</span>
-                                                        <span class="cell-status-badge ${indicatorColor}" title="${badgeTooltip}"></span>
-                                                    </div>
-                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                                        <span class="cell-room">${match.roomName}</span>
-                                                        <span style="font-size: 0.7rem; font-weight: 600; color: hsl(var(--text-muted));">${exactTime.split(' - ')[0]}</span>
-                                                    </div>
-                                                    <div class="cell-teachers">
-                                                        ${isSubbed 
-                                                            ? `<span class="cell-teacher">${teacherName}</span>
-                                                               <span class="cell-substitute-name"><i data-lucide="refresh-cw" style="width: 10px; height: 10px; display: inline; vertical-align: middle;"></i> ${currentTeacherName}</span>`
-                                                            : `<span class="cell-teacher">${currentTeacherName}</span>`
-                                                        }
-                                                        <span class="cell-backup">${backupText}</span>
-                                                    </div>
-                                                </div>
-                                            `;
-                                        } else {
-                                            html += `<div class="schedule-cell empty"></div>`;
-                                        }
-                                    });
-                                    return html;
-                                }).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            lucide.createIcons();
-            return;
-        }
 
         // Determine which set of slots to use for rendering
         const slotsToUse = (viewType === 'section') ? getSlotsForSection(viewVal) : OTHER_YEAR_SLOTS;
@@ -756,6 +839,117 @@ const app = {
     },
 
     // STAFF MODAL OPERATIONS
+
+    handleDirectStaffImport(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                if (typeof XLSX === 'undefined') {
+                    this.showToast('Excel library not loaded yet. Please wait and retry.', 'error');
+                    return;
+                }
+                const workbook = XLSX.read(evt.target.result, { type: 'binary' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+
+                if (!rawData || rawData.length === 0) {
+                    this.showToast('File is empty or invalid format.', 'error');
+                    return;
+                }
+
+                let nameIdx = 0;
+                let deptIdx = 1;
+                let subjIdx = -1;
+                let startIndex = 0;
+
+                const firstRow = rawData[0] || [];
+                
+                // Detect headers
+                let foundHeader = false;
+                for (let i = 0; i < firstRow.length; i++) {
+                    const val = String(firstRow[i] || '').toLowerCase();
+                    if (val.includes('name') || val.includes('staff') || val.includes('faculty')) {
+                        nameIdx = i;
+                        foundHeader = true;
+                    } else if (val.includes('dept') || val.includes('department') || val.includes('branch')) {
+                        deptIdx = i;
+                        foundHeader = true;
+                    } else if (val.includes('subject') || val.includes('expertise') || val.includes('handling') || val.includes('handle')) {
+                        subjIdx = i;
+                        foundHeader = true;
+                    }
+                }
+
+                if (foundHeader) {
+                    startIndex = 1; // skip header row
+                } else if (firstRow.length > 2) {
+                    // No headers but 3 or more columns, assume 3rd is subjects
+                    subjIdx = 2;
+                }
+
+                let importedCount = 0;
+                let existingStaff = DataStore.getStaff();
+
+                for (let i = startIndex; i < rawData.length; i++) {
+                    const rowArr = rawData[i];
+                    if (!rowArr || rowArr.length === 0) continue;
+
+                    let name = String(rowArr[nameIdx] || '').trim();
+                    let dept = String(rowArr[deptIdx] || '').trim() || 'CSE';
+                    
+                    let subjects = [];
+                    if (subjIdx !== -1) {
+                        const subStr = String(rowArr[subjIdx] || '');
+                        if (subStr.trim() !== '') {
+                            subjects = subStr.split(',').map(s => s.trim()).filter(s => s !== '');
+                        }
+                    }
+
+                    if (name && name !== '') {
+                        let existingMember = existingStaff.find(s => s.name.toLowerCase() === name.toLowerCase());
+                        
+                        if (existingMember) {
+                            // Merge subjects
+                            subjects.forEach(sub => {
+                                if (!existingMember.subjects.includes(sub)) {
+                                    existingMember.subjects.push(sub);
+                                }
+                            });
+                        } else {
+                            existingStaff.push({
+                                id: `ST${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+                                name: name,
+                                dept: dept,
+                                email: '',
+                                subjects: subjects,
+                                maxHoursPerWeek: 15,
+                                isAbsent: false
+                            });
+                            importedCount++;
+                        }
+                    }
+                }
+
+                if (importedCount > 0) {
+                    DataStore.saveStaff(existingStaff);
+                    this.renderStaffDirectory();
+                    this.showToast(`Successfully imported ${importedCount} staff members!`, 'success');
+                } else {
+                    this.showToast('No valid staff data found in file. Ensure columns have headers like "name", "dept".', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                this.showToast('Error parsing file. Please ensure it is a valid Excel or CSV file.', 'error');
+            }
+            e.target.value = ''; // Reset input
+        };
+        reader.readAsBinaryString(file);
+    },
+
     openStaffModal(staffId = null) {
         const overlay = document.getElementById('staff-modal-overlay');
         const form = document.getElementById('staff-form');
@@ -1570,12 +1764,12 @@ const app = {
         }
 
         this.closeModal('import');
-        this.showToast(`Imported: ${imported.join(', ')}. Generating timetable...`, 'success');
+        this.showToast(`Imported: ${imported.join(', ')}.`, 'success');
 
-        // Auto-run CSP Generator
+        // Reload to show imported data without auto-generating
         setTimeout(() => {
-            this.simulateCSPGeneration();
-        }, 400);
+            window.location.reload();
+        }, 800);
     }
 };
 
