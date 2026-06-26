@@ -10,10 +10,10 @@ const AbsenceManager = {
 
         const absentTeacher = staff.find(s => s.id === staffId);
         if (!absentTeacher) return { success: false, message: "Staff member not found." };
-        if (absentTeacher.isAbsent) return { success: false, message: "Staff member is already marked absent." };
+        if (absentTeacher.attendanceStatus === 'Absent') return { success: false, message: "Staff member is already marked absent." };
 
         // Mark absent
-        absentTeacher.isAbsent = true;
+        absentTeacher.attendanceStatus = 'Absent';
         DataStore.saveStaff(staff);
 
         // Find all classes taught by this teacher
@@ -34,7 +34,7 @@ const AbsenceManager = {
             if (slot.backupTeacherId) {
                 const primaryBackup = staff.find(s => s.id === slot.backupTeacherId);
                 // Check if primary backup is available: not absent, and not teaching in this slot
-                const isBackupFree = !primaryBackup.isAbsent && !schedule.some(s => s.currentTeacherId === primaryBackup.id && s.day === slot.day && s.period === slot.period);
+                const isBackupFree = primaryBackup.attendanceStatus !== 'Absent' && !schedule.some(s => s.currentTeacherId === primaryBackup.id && s.day === slot.day && s.period === slot.period);
                 
                 if (isBackupFree) {
                     chosenBackupId = primaryBackup.id;
@@ -51,7 +51,7 @@ const AbsenceManager = {
                 const candidates = staff.filter(t => 
                     t.id !== staffId &&
                     t.subjects.includes(slot.subjectCode) &&
-                    !t.isAbsent &&
+                    t.attendanceStatus !== 'Absent' &&
                     !schedule.some(s => s.currentTeacherId === t.id && s.day === slot.day && s.period === slot.period)
                 );
 
@@ -63,7 +63,7 @@ const AbsenceManager = {
                     const deptCandidates = staff.filter(t =>
                         t.id !== staffId &&
                         t.dept === sub.dept &&
-                        !t.isAbsent &&
+                        t.attendanceStatus !== 'Absent' &&
                         !schedule.some(s => s.currentTeacherId === t.id && s.day === slot.day && s.period === slot.period)
                     );
 
@@ -149,10 +149,10 @@ const AbsenceManager = {
 
         const presentTeacher = staff.find(s => s.id === staffId);
         if (!presentTeacher) return { success: false, message: "Staff member not found." };
-        if (!presentTeacher.isAbsent) return { success: false, message: "Staff member is already marked active." };
+        if (presentTeacher.attendanceStatus !== 'Absent') return { success: false, message: "Staff member is already marked active." };
 
         // Mark active
-        presentTeacher.isAbsent = false;
+        presentTeacher.attendanceStatus = 'Present';
         DataStore.saveStaff(staff);
 
         // Find slots where this teacher was original but was substituted
@@ -191,5 +191,31 @@ const AbsenceManager = {
             success: true,
             restoredCount
         };
+    },
+
+    autoProcessAbsences() {
+        const staff = DataStore.getStaff();
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const limitMinutes = 9 * 60 + 30; // 09:30 AM (turns "Absent" after 9:30 AM)
+
+        // For testing purposes, if window.DEBUG_FORCE_ABSENCE is true, we act as if time is exceeded
+        const isTimeExceeded = currentMinutes >= limitMinutes || window.DEBUG_FORCE_ABSENCE;
+
+        if (isTimeExceeded) {
+            let processed = 0;
+            // Iterate over a copy since markAbsent modifies things
+            const pendingStaff = staff.filter(s => s.attendanceStatus === 'Normal');
+            pendingStaff.forEach(s => {
+                this.markAbsent(s.id);
+                processed++;
+            });
+            if (processed > 0) {
+                console.log(`Auto-processed absences for ${processed} pending staff members.`);
+                if (typeof app !== 'undefined' && typeof app.renderAll === 'function') app.renderAll();
+            }
+            return processed;
+        }
+        return 0;
     }
 };

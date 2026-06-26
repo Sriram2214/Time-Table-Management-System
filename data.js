@@ -68,258 +68,7 @@ const DEFAULT_SECTIONS = [
 ];
 
 
-const DEFAULT_SUBJECTS = [
-    // ── CSE Year 1 ──
-    { code: "CS101",  name: "Introduction to Programming",      dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS101L", name: "Programming Lab (Python)",          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CS102",  name: "Engineering Mathematics I",         dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS103",  name: "Digital Logic Design",              dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS103L", name: "Digital Logic Lab",                 dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── CSE Year 2 ──
-    { code: "CS201",  name: "Data Structures & Algorithms",      dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS201L", name: "Data Structures Lab",               dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CS202",  name: "Operating Systems",                 dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS203",  name: "Database Management Systems",       dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS203L", name: "DBMS Lab",                          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CS204",  name: "Computer Organization & Architecture", dept: "CSE", type: "Theory",    hoursPerWeek: 3 },
-    // ── CSE Year 3 ──
-    { code: "CS301",  name: "Computer Networks",                 dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS301L", name: "Networking Lab",                    dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CS302",  name: "Software Engineering",              dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS302L", name: "Software Engineering Lab",          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CS303",  name: "Theory of Computation",             dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS304",  name: "Compiler Design",                   dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    // ── CSE Year 4 ──
-    { code: "CS401",  name: "Machine Learning",                  dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS401L", name: "Machine Learning Lab",              dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CS402",  name: "Distributed Systems",               dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS403",  name: "Information Security & Cryptography", dept: "CSE", type: "Theory",     hoursPerWeek: 3 },
-    { code: "CS404",  name: "Cloud Computing",                   dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "CS404L", name: "Cloud & DevOps Lab",                dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
-
-    // ── ECE Year 1 ──
-    { code: "EC101",  name: "Basic Electronics",                 dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC101L", name: "Electronics Devices Lab",           dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EC102",  name: "Engineering Physics",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC103",  name: "Circuit Theory",                    dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    // ── ECE Year 2 ──
-    { code: "EC201",  name: "Digital Electronics",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC201L", name: "Digital Logic Design Lab",          dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EC202",  name: "Signals and Systems",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC203",  name: "Microprocessors & Microcontrollers", dept: "ECE", type: "Theory",      hoursPerWeek: 3 },
-    { code: "EC203L", name: "Microprocessor Lab",                dept: "ECE", type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── ECE Year 3 ──
-    { code: "EC301",  name: "VLSI Design",                       dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC301L", name: "VLSI Design Lab",                   dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EC302",  name: "Embedded Systems",                  dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC302L", name: "Embedded Systems Lab",              dept: "ECE", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "EC303",  name: "Communication Systems",             dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC304",  name: "Digital Signal Processing",         dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    // ── ECE Year 4 ──
-    { code: "EC401",  name: "Wireless Communication",            dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC401L", name: "DSP Lab",                           dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EC402",  name: "Digital Image Processing",          dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC403",  name: "Antenna & Wave Propagation",        dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EC404",  name: "IoT & Sensor Networks",             dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
-
-    // ── ME Year 1 ──
-    { code: "ME101",  name: "Engineering Mechanics",             dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME102",  name: "Engineering Drawing",               dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME102L", name: "Engineering Drawing Lab",           dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── ME Year 2 ──
-    { code: "ME201",  name: "Thermodynamics",                    dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME201L", name: "Thermal Engineering Lab",           dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "ME202",  name: "Fluid Mechanics",                   dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME202L", name: "Fluid Machinery Lab",               dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "ME203",  name: "Strength of Materials",             dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    // ── ME Year 3 ──
-    { code: "ME301",  name: "Manufacturing Technology",          dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME301L", name: "Manufacturing Lab",                 dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "ME302",  name: "Heat Transfer",                     dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME303",  name: "Machine Design",                    dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME304",  name: "Theory of Machines",                dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME304L", name: "Dynamics Lab",                      dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── ME Year 4 ──
-    { code: "ME401",  name: "Robotics & Automation",             dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME401L", name: "Robotics Lab",                      dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "ME402",  name: "Industrial Engineering",            dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME403",  name: "Finite Element Analysis",           dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME404",  name: "CAD/CAM",                           dept: "Mechanical",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "ME404L", name: "CAD/CAM Lab",                       dept: "Mechanical",  type: "Practical/Lab", hoursPerWeek: 2 },
-
-    // ── CE Year 1 ──
-    { code: "CE101",  name: "Introduction to Civil Engineering", dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE102",  name: "Engineering Drawing",               dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE102L", name: "Surveying Field Lab",               dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── CE Year 2 ──
-    { code: "CE201",  name: "Strength of Materials",             dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE201L", name: "Material Testing Lab",              dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CE202",  name: "Surveying",                         dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE203",  name: "Fluid Mechanics for Civil",         dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE203L", name: "Hydraulics Lab",                    dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 2 },
-    // ── CE Year 3 ──
-    { code: "CE301",  name: "Structural Analysis",               dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE301L", name: "Structural Lab",                    dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CE302",  name: "Geotechnical Engineering",          dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE302L", name: "Soil Mechanics Lab",                dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CE303",  name: "Transportation Engineering",        dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE304",  name: "Concrete Technology",               dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    // ── CE Year 4 ──
-    { code: "CE401",  name: "Environmental Engineering",         dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE401L", name: "Environmental Lab",                 dept: "Civil",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CE402",  name: "Construction Management",           dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE403",  name: "Design of Steel Structures",        dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CE404",  name: "Remote Sensing & GIS",              dept: "Civil",  type: "Theory",       hoursPerWeek: 3 },
-
-    // ── EEE Year 1 ──
-    { code: "EE101",  name: "Basic Electrical Engineering",      dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE101L", name: "Electrical Engineering Lab",        dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EE102",  name: "Engineering Mathematics",           dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    // ── EEE Year 2 ──
-    { code: "EE201",  name: "Network Analysis & Synthesis",      dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE202",  name: "Electrical Machines",               dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE202L", name: "Electrical Machines Lab",           dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EE203",  name: "Electromagnetic Theory",            dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    // ── EEE Year 3 ──
-    { code: "EE301",  name: "Power Systems",                     dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE301L", name: "Power Systems Lab",                 dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EE302",  name: "Control Systems",                   dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE302L", name: "Control Systems Lab",               dept: "EEE", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "EE303",  name: "Power Electronics",                 dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE304",  name: "Microcontrollers & PLCs",           dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    // ── EEE Year 4 ──
-    { code: "EE401",  name: "High Voltage Engineering",          dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE401L", name: "High Voltage Lab",                  dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "EE402",  name: "Electric Drives",                   dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE402L", name: "Electric Drives Lab",               dept: "EEE", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "EE403",  name: "Smart Grid Technology",             dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-    { code: "EE404",  name: "Renewable Energy Systems",          dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
-
-    // ── IT Year 1 ──
-    { code: "IT101",  name: "Problem Solving & Programming",     dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT101L", name: "Programming Lab",                   dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IT102",  name: "Mathematics for Computing",         dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT103",  name: "Digital Fundamentals",              dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    // ── IT Year 2 ──
-    { code: "IT201",  name: "Data Structures",                   dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT201L", name: "Data Structures Lab",               dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IT202",  name: "Object Oriented Programming",       dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT202L", name: "OOP Lab",                           dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IT203",  name: "Web Technologies",                  dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    // ── IT Year 3 ──
-    { code: "IT301",  name: "Computer Networks",                 dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT301L", name: "Networking Lab",                    dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IT302",  name: "Database Systems",                  dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT302L", name: "Database Lab",                      dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IT303",  name: "Software Engineering",              dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    // ── IT Year 4 ──
-    { code: "IT401",  name: "Cloud Computing",                   dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT401L", name: "Cloud Lab",                         dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IT402",  name: "Cyber Security",                    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT402L", name: "Security Lab",                      dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IT403",  name: "Mobile Application Development",    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-    { code: "IT404",  name: "DevOps & Agile",                    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
-
-    // ── AIDS Year 1 ──
-    { code: "AD101",  name: "Introduction to AI & Data Science", dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD101L", name: "Python for AI Lab",                 dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AD102",  name: "Statistics & Probability",          dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD103",  name: "Linear Algebra for ML",             dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIDS Year 2 ──
-    { code: "AD201",  name: "Machine Learning",                  dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD201L", name: "ML Lab",                            dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AD202",  name: "Data Structures & Algorithms",      dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD202L", name: "DSA Lab",                           dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AD203",  name: "Database Management",               dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIDS Year 3 ──
-    { code: "AD301",  name: "Deep Learning",                     dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD301L", name: "Deep Learning Lab",                 dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AD302",  name: "Big Data Analytics",                dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD302L", name: "Big Data Lab",                      dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AD303",  name: "Natural Language Processing",       dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIDS Year 4 ──
-    { code: "AD401",  name: "Computer Vision",                   dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD401L", name: "Computer Vision Lab",               dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AD402",  name: "Reinforcement Learning",            dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD402L", name: "RL Lab",                            dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AD403",  name: "AI Ethics & Governance",            dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AD404",  name: "Data Science Capstone",             dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
-
-    // ── AIML Year 1 ──
-    { code: "AM101",  name: "Foundations of Artificial Intelligence", dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM101L", name: "AI Programming Lab",                     dept: "AIML", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AM102",  name: "Calculus & Linear Algebra",              dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM103",  name: "Introduction to Machine Learning",       dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIML Year 2 ──
-    { code: "AM201",  name: "Machine Learning Algorithms",            dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM201L", name: "ML Lab",                                 dept: "AIML", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AM202",  name: "Neural Networks",                        dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM202L", name: "Neural Networks Lab",                    dept: "AIML", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AM203",  name: "Data Mining & Warehousing",              dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIML Year 3 ──
-    { code: "AM301",  name: "Deep Learning",                          dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM301L", name: "Deep Learning Lab",                      dept: "AIML", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AM302",  name: "Computer Vision",                        dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM302L", name: "Computer Vision Lab",                    dept: "AIML", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AM303",  name: "Natural Language Processing",            dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    // ── AIML Year 4 ──
-    { code: "AM401",  name: "Generative AI & Large Language Models",  dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM401L", name: "GenAI Lab",                              dept: "AIML", type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "AM402",  name: "Reinforcement Learning",                 dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM402L", name: "RL Lab",                                 dept: "AIML", type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "AM403",  name: "AI Ethics & Governance",                 dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-    { code: "AM404",  name: "AI Capstone Project",                    dept: "AIML", type: "Theory",       hoursPerWeek: 3 },
-
-    // ── CYS Year 1 ──
-    { code: "CY101",  name: "Fundamentals of Cybersecurity",          dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY101L", name: "Security Lab I",                         dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CY102",  name: "Computer Networks Basics",               dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY103",  name: "Programming for Security",               dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    // ── CYS Year 2 ──
-    { code: "CY201",  name: "Network Security",                       dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY201L", name: "Network Security Lab",                   dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CY202",  name: "Cryptography & Information Security",    dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY202L", name: "Cryptography Lab",                       dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CY203",  name: "Operating Systems Security",             dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    // ── CYS Year 3 ──
-    { code: "CY301",  name: "Ethical Hacking & Penetration Testing",  dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY301L", name: "Ethical Hacking Lab",                    dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CY302",  name: "Digital Forensics",                      dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY302L", name: "Digital Forensics Lab",                  dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CY303",  name: "Web Application Security",               dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    // ── CYS Year 4 ──
-    { code: "CY401",  name: "Malware Analysis & Reverse Engineering", dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY401L", name: "Malware Analysis Lab",                   dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "CY402",  name: "Cloud Security",                         dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY402L", name: "Cloud Security Lab",                     dept: "Cyber Security",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "CY403",  name: "Incident Response & Threat Intelligence",dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "CY404",  name: "Security Operations & SOC Management",   dept: "Cyber Security",  type: "Theory",       hoursPerWeek: 3 },
-
-    // ── IOT Year 1 ──
-    { code: "IO101",  name: "Introduction to Internet of Things",     dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO101L", name: "IoT Lab I",                              dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IO102",  name: "Electronics for IoT",                    dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO103",  name: "Programming for IoT (Python/C)",         dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    // ── IOT Year 2 ──
-    { code: "IO201",  name: "Embedded Systems & Microcontrollers",    dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO201L", name: "Embedded Systems Lab",                   dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IO202",  name: "Sensors, Actuators & Interfacing",       dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO202L", name: "Sensors Lab",                            dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IO203",  name: "Wireless Communication Protocols",       dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    // ── IOT Year 3 ──
-    { code: "IO301",  name: "IoT Architecture & System Design",       dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO301L", name: "IoT Design Lab",                         dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IO302",  name: "Edge Computing & Fog Computing",         dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO302L", name: "Edge Computing Lab",                     dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IO303",  name: "IoT Security & Privacy",                 dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    // ── IOT Year 4 ──
-    { code: "IO401",  name: "Industrial IoT & Industry 4.0",          dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO401L", name: "Industrial IoT Lab",                     dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 4 },
-    { code: "IO402",  name: "Smart Systems & Automation",             dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO402L", name: "Automation Lab",                         dept: "IoT",  type: "Practical/Lab", hoursPerWeek: 2 },
-    { code: "IO403",  name: "Cloud IoT Platforms & Analytics",        dept: "IoT",  type: "Theory",       hoursPerWeek: 3 },
-    { code: "IO404",  name: "IoT Capstone Project",                   dept: "IoT",  type: "Theory",       hoursPerWeek: 3 }
-];
+const DEFAULT_SUBJECTS = [];
 
 const DEFAULT_STAFF = [];
 
@@ -406,9 +155,13 @@ const DataStore = {
         localStorage.removeItem(STORAGE_KEYS.SCHEDULE);
     },
     initialize() {
-        if (!localStorage.getItem("tt_staff_cleared_v2")) {
+        if (!localStorage.getItem("tt_staff_cleared_v4")) {
             this.saveStaff([]);
-            localStorage.setItem("tt_staff_cleared_v2", "true");
+            this.saveSubjects([]);
+            this.saveSections([]);
+            this.saveSchedule([]);
+            this.saveSubLogs([]);
+            localStorage.setItem("tt_staff_cleared_v4", "true");
         }
         // Force reset if sections are outdated (old data had only 20, new has 40)
         const existingSections = JSON.parse(localStorage.getItem(STORAGE_KEYS.SECTIONS));
@@ -438,3 +191,334 @@ const DataStore = {
 
 // Auto initialize store
 DataStore.initialize();
+
+
+const SAMPLE_SUBJECTS = [
+// ── CSE Year 1 ──
+    { code: "CS101",  name: "Introduction to Programming",      dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS101L", name: "Programming Lab (Python)",          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CS102",  name: "Engineering Mathematics I",         dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS103",  name: "Digital Logic Design",              dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS103L", name: "Digital Logic Lab",                 dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── CSE Year 2 ──
+    { code: "CS201",  name: "Data Structures & Algorithms",      dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS201L", name: "Data Structures Lab",               dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CS202",  name: "Operating Systems",                 dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS203",  name: "Database Management Systems",       dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS203L", name: "DBMS Lab",                          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "CS204",  name: "Computer Organization & Architecture", dept: "CSE", type: "Theory",    hoursPerWeek: 3 },
+    // ── CSE Year 3 ──
+    { code: "CS301",  name: "Computer Networks",                 dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS301L", name: "Networking Lab",                    dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CS302",  name: "Software Engineering",              dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS302L", name: "Software Engineering Lab",          dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "CS303",  name: "Theory of Computation",             dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS304",  name: "Compiler Design",                   dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    // ── CSE Year 4 ──
+    { code: "CS401",  name: "Machine Learning",                  dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS401L", name: "Machine Learning Lab",              dept: "CSE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CS402",  name: "Distributed Systems",               dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS403",  name: "Information Security & Cryptography", dept: "CSE", type: "Theory",     hoursPerWeek: 3 },
+    { code: "CS404",  name: "Cloud Computing",                   dept: "CSE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CS404L", name: "Cloud & DevOps Lab",                dept: "CSE", type: "Practical/Lab", hoursPerWeek: 2 },
+
+    // ── ECE Year 1 ──
+    { code: "EC101",  name: "Basic Electronics",                 dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC101L", name: "Electronics Devices Lab",           dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EC102",  name: "Engineering Physics",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC103",  name: "Circuit Theory",                    dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    // ── ECE Year 2 ──
+    { code: "EC201",  name: "Digital Electronics",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC201L", name: "Digital Logic Design Lab",          dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EC202",  name: "Signals and Systems",               dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC203",  name: "Microprocessors & Microcontrollers", dept: "ECE", type: "Theory",      hoursPerWeek: 3 },
+    { code: "EC203L", name: "Microprocessor Lab",                dept: "ECE", type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── ECE Year 3 ──
+    { code: "EC301",  name: "VLSI Design",                       dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC301L", name: "VLSI Design Lab",                   dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EC302",  name: "Embedded Systems",                  dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC302L", name: "Embedded Systems Lab",              dept: "ECE", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "EC303",  name: "Communication Systems",             dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC304",  name: "Digital Signal Processing",         dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    // ── ECE Year 4 ──
+    { code: "EC401",  name: "Wireless Communication",            dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC401L", name: "DSP Lab",                           dept: "ECE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EC402",  name: "Digital Image Processing",          dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC403",  name: "Antenna & Wave Propagation",        dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EC404",  name: "IoT & Sensor Networks",             dept: "ECE", type: "Theory",       hoursPerWeek: 3 },
+
+    // ── ME Year 1 ──
+    { code: "ME101",  name: "Engineering Mechanics",             dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME102",  name: "Engineering Drawing",               dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME102L", name: "Engineering Drawing Lab",           dept: "ME",  type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── ME Year 2 ──
+    { code: "ME201",  name: "Thermodynamics",                    dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME201L", name: "Thermal Engineering Lab",           dept: "ME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "ME202",  name: "Fluid Mechanics",                   dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME202L", name: "Fluid Machinery Lab",               dept: "ME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "ME203",  name: "Strength of Materials",             dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    // ── ME Year 3 ──
+    { code: "ME301",  name: "Manufacturing Technology",          dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME301L", name: "Manufacturing Lab",                 dept: "ME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "ME302",  name: "Heat Transfer",                     dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME303",  name: "Machine Design",                    dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME304",  name: "Theory of Machines",                dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME304L", name: "Dynamics Lab",                      dept: "ME",  type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── ME Year 4 ──
+    { code: "ME401",  name: "Robotics & Automation",             dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME401L", name: "Robotics Lab",                      dept: "ME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "ME402",  name: "Industrial Engineering",            dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME403",  name: "Finite Element Analysis",           dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME404",  name: "CAD/CAM",                           dept: "ME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "ME404L", name: "CAD/CAM Lab",                       dept: "ME",  type: "Practical/Lab", hoursPerWeek: 2 },
+
+    // ── CE Year 1 ──
+    { code: "CE101",  name: "Introduction to Civil Engineering", dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE102",  name: "Engineering Drawing",               dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE102L", name: "Surveying Field Lab",               dept: "CE",  type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── CE Year 2 ──
+    { code: "CE201",  name: "Strength of Materials",             dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE201L", name: "Material Testing Lab",              dept: "CE",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CE202",  name: "Surveying",                         dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE203",  name: "Fluid Mechanics for Civil",         dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE203L", name: "Hydraulics Lab",                    dept: "CE",  type: "Practical/Lab", hoursPerWeek: 2 },
+    // ── CE Year 3 ──
+    { code: "CE301",  name: "Structural Analysis",               dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE301L", name: "Structural Lab",                    dept: "CE",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CE302",  name: "Geotechnical Engineering",          dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE302L", name: "Soil Mechanics Lab",                dept: "CE",  type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "CE303",  name: "Transportation Engineering",        dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE304",  name: "Concrete Technology",               dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    // ── CE Year 4 ──
+    { code: "CE401",  name: "Environmental Engineering",         dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE401L", name: "Environmental Lab",                 dept: "CE",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CE402",  name: "Construction Management",           dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE403",  name: "Design of Steel Structures",        dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "CE404",  name: "Remote Sensing & GIS",              dept: "CE",  type: "Theory",       hoursPerWeek: 3 },
+
+    // ── EEE Year 1 ──
+    { code: "EE101",  name: "Basic Electrical Engineering",      dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE101L", name: "Electrical Engineering Lab",        dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EE102",  name: "Engineering Mathematics",           dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    // ── EEE Year 2 ──
+    { code: "EE201",  name: "Network Analysis & Synthesis",      dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE202",  name: "Electrical Machines",               dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE202L", name: "Electrical Machines Lab",           dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EE203",  name: "Electromagnetic Theory",            dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    // ── EEE Year 3 ──
+    { code: "EE301",  name: "Power Systems",                     dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE301L", name: "Power Systems Lab",                 dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EE302",  name: "Control Systems",                   dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE302L", name: "Control Systems Lab",               dept: "EEE", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "EE303",  name: "Power Electronics",                 dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE304",  name: "Microcontrollers & PLCs",           dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    // ── EEE Year 4 ──
+    { code: "EE401",  name: "High Voltage Engineering",          dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE401L", name: "High Voltage Lab",                  dept: "EEE", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "EE402",  name: "Electric Drives",                   dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE402L", name: "Electric Drives Lab",               dept: "EEE", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "EE403",  name: "Smart Grid Technology",             dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+    { code: "EE404",  name: "Renewable Energy Systems",          dept: "EEE", type: "Theory",       hoursPerWeek: 3 },
+
+    // ── IT Year 1 ──
+    { code: "IT101",  name: "Problem Solving & Programming",     dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT101L", name: "Programming Lab",                   dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "IT102",  name: "Mathematics for Computing",         dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT103",  name: "Digital Fundamentals",              dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    // ── IT Year 2 ──
+    { code: "IT201",  name: "Data Structures",                   dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT201L", name: "Data Structures Lab",               dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "IT202",  name: "Object Oriented Programming",       dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT202L", name: "OOP Lab",                           dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "IT203",  name: "Web Technologies",                  dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    // ── IT Year 3 ──
+    { code: "IT301",  name: "Computer Networks",                 dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT301L", name: "Networking Lab",                    dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "IT302",  name: "Database Systems",                  dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT302L", name: "Database Lab",                      dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "IT303",  name: "Software Engineering",              dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    // ── IT Year 4 ──
+    { code: "IT401",  name: "Cloud Computing",                   dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT401L", name: "Cloud Lab",                         dept: "IT",   type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "IT402",  name: "Cyber Security",                    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT402L", name: "Security Lab",                      dept: "IT",   type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "IT403",  name: "Mobile Application Development",    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+    { code: "IT404",  name: "DevOps & Agile",                    dept: "IT",   type: "Theory",       hoursPerWeek: 3 },
+
+    // ── AIDS Year 1 ──
+    { code: "AD101",  name: "Introduction to AI & Data Science", dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD101L", name: "Python for AI Lab",                 dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AD102",  name: "Statistics & Probability",          dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD103",  name: "Linear Algebra for ML",             dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    // ── AIDS Year 2 ──
+    { code: "AD201",  name: "Machine Learning",                  dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD201L", name: "ML Lab",                            dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AD202",  name: "Data Structures & Algorithms",      dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD202L", name: "DSA Lab",                           dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "AD203",  name: "Database Management",               dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    // ── AIDS Year 3 ──
+    { code: "AD301",  name: "Deep Learning",                     dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD301L", name: "Deep Learning Lab",                 dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AD302",  name: "Big Data Analytics",                dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD302L", name: "Big Data Lab",                      dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "AD303",  name: "Natural Language Processing",       dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    // ── AIDS Year 4 ──
+    { code: "AD401",  name: "Computer Vision",                   dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD401L", name: "Computer Vision Lab",               dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AD402",  name: "Reinforcement Learning",            dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD402L", name: "RL Lab",                            dept: "AIDS", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "AD403",  name: "AI Ethics & Governance",            dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AD404",  name: "Data Science Capstone",             dept: "AIDS", type: "Theory",       hoursPerWeek: 3 },
+
+    // ── CHEM Year 1 ──
+    { code: "CH101",  name: "Engineering Chemistry",             dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH101L", name: "Chemistry Lab",                     dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CH102",  name: "Mathematics for Chemical Engg",     dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH103",  name: "Introduction to Chemical Processes",dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    // ── CHEM Year 2 ──
+    { code: "CH201",  name: "Chemical Reaction Engineering",     dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH201L", name: "Reaction Engineering Lab",          dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CH202",  name: "Fluid Mechanics for ChE",           dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH202L", name: "Fluid Lab",                         dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "CH203",  name: "Thermodynamics for ChE",            dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    // ── CHEM Year 3 ──
+    { code: "CH301",  name: "Mass Transfer Operations",          dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH301L", name: "Mass Transfer Lab",                 dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CH302",  name: "Heat Transfer",                     dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH302L", name: "Heat Transfer Lab",                 dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "CH303",  name: "Process Dynamics & Control",        dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    // ── CHEM Year 4 ──
+    { code: "CH401",  name: "Chemical Plant Design",             dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH401L", name: "Plant Design Lab",                  dept: "CHEM", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "CH402",  name: "Polymer Technology",                dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH403",  name: "Petrochemical Engineering",         dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+    { code: "CH404",  name: "Environmental Chemical Engineering",dept: "CHEM", type: "Theory",       hoursPerWeek: 3 },
+
+    // ── BME Year 1 ──
+    { code: "BM101",  name: "Introduction to Biomedical Engg",  dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM101L", name: "Biomedical Lab I",                  dept: "BME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "BM102",  name: "Anatomy & Physiology",              dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM103",  name: "Bio-signals & Systems",             dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    // ── BME Year 2 ──
+    { code: "BM201",  name: "Medical Instrumentation",           dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM201L", name: "Instrumentation Lab",               dept: "BME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "BM202",  name: "Biomaterials",                      dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM202L", name: "Biomaterials Lab",                  dept: "BME",  type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "BM203",  name: "Biomedical Signal Processing",      dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    // ── BME Year 3 ──
+    { code: "BM301",  name: "Medical Imaging Systems",           dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM301L", name: "Imaging Lab",                       dept: "BME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "BM302",  name: "Rehabilitation Engineering",        dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM302L", name: "Rehabilitation Lab",                dept: "BME",  type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "BM303",  name: "Clinical Engineering",              dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    // ── BME Year 4 ──
+    { code: "BM401",  name: "Artificial Organs & Prosthetics",   dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM401L", name: "Prosthetics Lab",                   dept: "BME",  type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "BM402",  name: "Telemedicine & eHealth",            dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM403",  name: "Biomedical Ethics & Regulations",   dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+    { code: "BM404",  name: "Research Methodology in BME",       dept: "BME",  type: "Theory",       hoursPerWeek: 3 },
+
+    // ── AERO Year 1 ──
+    { code: "AE101",  name: "Introduction to Aerospace Engg",   dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE101L", name: "Aerospace Lab I",                   dept: "AERO", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AE102",  name: "Engineering Mechanics for AERO",    dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE103",  name: "Fluid Mechanics for AERO",          dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    // ── AERO Year 2 ──
+    { code: "AE201",  name: "Aerodynamics I",                    dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE201L", name: "Aerodynamics Lab",                  dept: "AERO", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AE202",  name: "Aircraft Structures",               dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE202L", name: "Structures Lab",                    dept: "AERO", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "AE203",  name: "Thermodynamics for AERO",           dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    // ── AERO Year 3 ──
+    { code: "AE301",  name: "Propulsion Systems",                dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE301L", name: "Propulsion Lab",                    dept: "AERO", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AE302",  name: "Aerodynamics II",                   dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE302L", name: "Wind Tunnel Lab",                   dept: "AERO", type: "Practical/Lab", hoursPerWeek: 2 },
+    { code: "AE303",  name: "Flight Mechanics",                  dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    // ── AERO Year 4 ──
+    { code: "AE401",  name: "Aircraft Design",                   dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE401L", name: "Design Lab",                        dept: "AERO", type: "Practical/Lab", hoursPerWeek: 4 },
+    { code: "AE402",  name: "Avionics",                          dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE403",  name: "Spacecraft Technology",             dept: "AERO", type: "Theory",       hoursPerWeek: 3 },
+    { code: "AE404",  name: "UAV & Drone Systems",               dept: "AERO", type: "Theory",       hoursPerWeek: 3 }
+];
+
+const SAMPLE_STAFF = [
+// CSE Staff (7)
+    { id: "ST001", name: "Dr. Rajesh Kumar", dept: "CSE", email: "rajesh.kumar@college.edu", subjects: ["CS101", "CS201", "CS202"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST002", name: "Prof. Anjali Sharma", dept: "CSE", email: "anjali.sharma@college.edu", subjects: ["CS101L", "CS201L", "CS203L"], maxHoursPerWeek: 18, isAbsent: false },
+    { id: "ST003", name: "Dr. Vikram Singh", dept: "CSE", email: "vikram.singh@college.edu", subjects: ["CS201", "CS203", "CS101"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST004", name: "Mrs. Priya Patel", dept: "CSE", email: "priya.patel@college.edu", subjects: ["CS101", "CS101L", "CS203"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST005", name: "Mr. Amit Verma", dept: "CSE", email: "amit.verma@college.edu", subjects: ["CS202", "CS201L", "CS203L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST006", name: "Dr. Neha Gupta", dept: "CSE", email: "neha.gupta@college.edu", subjects: ["CS203", "CS201", "CS202"], maxHoursPerWeek: 12, isAbsent: false },
+    { id: "ST007", name: "Mr. Sandeep Reddy", dept: "CSE", email: "sandeep.reddy@college.edu", subjects: ["CS101L", "CS201L", "CS101"], maxHoursPerWeek: 15, isAbsent: false },
+
+    // ECE Staff (6)
+    { id: "ST011", name: "Dr. Sanjay Deshmukh", dept: "ECE", email: "sanjay.deshmukh@college.edu", subjects: ["EC101", "EC201", "EC202"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST012", name: "Prof. Meera Sen", dept: "ECE", email: "meera.sen@college.edu", subjects: ["EC101L", "EC201L", "EC203"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST013", name: "Mr. Gaurav Joshi", dept: "ECE", email: "gaurav.joshi@college.edu", subjects: ["EC101", "EC201L", "EC203"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST014", name: "Dr. Swati Mishra", dept: "ECE", email: "swati.mishra@college.edu", subjects: ["EC202", "EC203", "EC101"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST015", name: "Mrs. Kavitha Nair", dept: "ECE", email: "kavitha.nair@college.edu", subjects: ["EC101L", "EC201", "EC201L"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST016", name: "Mr. Rahul Roy", dept: "ECE", email: "rahul.roy@college.edu", subjects: ["EC101", "EC101L", "EC202"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // ME Staff (6)
+    { id: "ST021", name: "Dr. Anil Mehta", dept: "ME", email: "anil.mehta@college.edu", subjects: ["ME101", "ME201", "ME202"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST022", name: "Prof. Harish Rao", dept: "ME", email: "harish.rao@college.edu", subjects: ["ME201L", "ME202L", "ME101"], maxHoursPerWeek: 18, isAbsent: false },
+    { id: "ST023", name: "Mr. Manoj Saxena", dept: "ME", email: "manoj.saxena@college.edu", subjects: ["ME101", "ME202", "ME202L"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST024", name: "Dr. Ritu Choudhary", dept: "ME", email: "ritu.choudhary@college.edu", subjects: ["ME201", "ME201L", "ME202"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST025", name: "Mr. Nitin Pandey", dept: "ME", email: "nitin.pandey@college.edu", subjects: ["ME201L", "ME202L", "ME202"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST026", name: "Mrs. Shalini Singh", dept: "ME", email: "shalini.singh@college.edu", subjects: ["ME101", "ME201", "ME201L"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // CE Staff (6)
+    { id: "ST031", name: "Dr. Vinod Prasad", dept: "CE", email: "vinod.prasad@college.edu", subjects: ["CE101", "CE201", "CE202"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST032", name: "Prof. Sunita Iyer", dept: "CE", email: "sunita.iyer@college.edu", subjects: ["CE201L", "CE202", "CE101"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST033", name: "Mr. Vivek Dubey", dept: "CE", email: "vivek.dubey@college.edu", subjects: ["CE101", "CE201L", "CE201"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST034", name: "Dr. Pooja Hegde", dept: "CE", email: "pooja.hegde@college.edu", subjects: ["CE201", "CE202", "CE201L"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST035", name: "Mrs. Deepa Pillai", dept: "CE", email: "deepa.pillai@college.edu", subjects: ["CE101", "CE201L", "CE202"], maxHoursPerWeek: 14, isAbsent: false },
+    { id: "ST036", name: "Mr. Arun Bose", dept: "CE", email: "arun.bose@college.edu", subjects: ["CE201", "CE202", "CE101"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // EEE Staff (6)
+    { id: "ST041", name: "Dr. K. Srinivasan",  dept: "EEE", email: "k.srinivasan@college.edu",  subjects: ["EE101","EE201","EE202","EE301","EE302"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST042", name: "Prof. Laxmi Prasad", dept: "EEE", email: "laxmi.prasad@college.edu",  subjects: ["EE101L","EE202","EE202L","EE301L","EE401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST043", name: "Mr. Dennis Mathew",  dept: "EEE", email: "dennis.mathew@college.edu", subjects: ["EE101","EE201","EE101L","EE303","EE304"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST044", name: "Dr. Archana Sen",    dept: "EEE", email: "archana.sen@college.edu",   subjects: ["EE201","EE202","EE203","EE302","EE401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST045", name: "Mrs. Preeti Vyas",   dept: "EEE", email: "preeti.vyas@college.edu",   subjects: ["EE101L","EE202L","EE302L","EE402","EE402L"], maxHoursPerWeek: 14, isAbsent: false },
+    { id: "ST046", name: "Mr. Jose Kurian",    dept: "EEE", email: "jose.kurian@college.edu",   subjects: ["EE101","EE101L","EE303","EE403","EE404"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // IT Staff (6)
+    { id: "ST051", name: "Dr. Karthik Rajan",     dept: "IT", email: "karthik.rajan@college.edu",    subjects: ["IT101","IT201","IT301","IT401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST052", name: "Prof. Divya Mohan",     dept: "IT", email: "divya.mohan@college.edu",     subjects: ["IT101L","IT201L","IT301L","IT401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST053", name: "Mr. Suresh Babu",       dept: "IT", email: "suresh.babu@college.edu",     subjects: ["IT102","IT202","IT302","IT402"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST054", name: "Dr. Meena Krishnan",    dept: "IT", email: "meena.krishnan@college.edu",  subjects: ["IT103","IT203","IT303","IT403"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST055", name: "Mrs. Anitha Selvam",    dept: "IT", email: "anitha.selvam@college.edu",   subjects: ["IT101","IT201","IT302L","IT404"], maxHoursPerWeek: 14, isAbsent: false },
+    { id: "ST056", name: "Mr. Praveen Kumar",     dept: "IT", email: "praveen.kumar@college.edu",   subjects: ["IT101L","IT202L","IT301","IT402L"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // AIDS Staff (6)
+    { id: "ST061", name: "Dr. Prabhakaran S.",    dept: "AIDS", email: "prabhakaran@college.edu",  subjects: ["AD101","AD201","AD301","AD401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST062", name: "Prof. Kavya Nair",      dept: "AIDS", email: "kavya.nair@college.edu",   subjects: ["AD101L","AD201L","AD301L","AD401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST063", name: "Mr. Rajan Pillai",      dept: "AIDS", email: "rajan.pillai@college.edu", subjects: ["AD102","AD202","AD302","AD402"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST064", name: "Dr. Sneha Varghese",    dept: "AIDS", email: "sneha.varghese@college.edu", subjects: ["AD103","AD203","AD303","AD403"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST065", name: "Mrs. Lakshmi Devi",     dept: "AIDS", email: "lakshmi.devi@college.edu", subjects: ["AD101","AD202L","AD302L","AD404"], maxHoursPerWeek: 14, isAbsent: false },
+    { id: "ST066", name: "Mr. Ajith Menon",       dept: "AIDS", email: "ajith.menon@college.edu",  subjects: ["AD101L","AD201","AD301","AD402L"], maxHoursPerWeek: 12, isAbsent: false },
+
+    // CHEM Staff (5)
+    { id: "ST071", name: "Dr. Ramesh Iyer",       dept: "CHEM", email: "ramesh.iyer@college.edu",   subjects: ["CH101","CH201","CH301","CH401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST072", name: "Prof. Saranya Raj",     dept: "CHEM", email: "saranya.raj@college.edu",   subjects: ["CH101L","CH201L","CH301L","CH401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST073", name: "Mr. Dinesh Varma",      dept: "CHEM", email: "dinesh.varma@college.edu",  subjects: ["CH102","CH202","CH302","CH402"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST074", name: "Dr. Usha Krishnan",     dept: "CHEM", email: "usha.krishnan@college.edu", subjects: ["CH103","CH203","CH303","CH403"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST075", name: "Mrs. Geetha Narayanan", dept: "CHEM", email: "geetha.n@college.edu",      subjects: ["CH101","CH202L","CH302L","CH404"], maxHoursPerWeek: 14, isAbsent: false },
+
+    // BME Staff (5)
+    { id: "ST081", name: "Dr. Vasanth Kumar",     dept: "BME", email: "vasanth.kumar@college.edu",  subjects: ["BM101","BM201","BM301","BM401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST082", name: "Prof. Nithya Srinivas", dept: "BME", email: "nithya.srinivas@college.edu", subjects: ["BM101L","BM201L","BM301L","BM401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST083", name: "Mr. Venkatesh Raj",     dept: "BME", email: "venkatesh.raj@college.edu",  subjects: ["BM102","BM202","BM302","BM402"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST084", name: "Dr. Sujatha Balaji",    dept: "BME", email: "sujatha.balaji@college.edu", subjects: ["BM103","BM203","BM303","BM403"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST085", name: "Mrs. Rekha Chandran",   dept: "BME", email: "rekha.chandran@college.edu", subjects: ["BM101","BM202L","BM302L","BM404"], maxHoursPerWeek: 14, isAbsent: false },
+
+    // AERO Staff (5)
+    { id: "ST091", name: "Dr. Arjun Nair",        dept: "AERO", email: "arjun.nair@college.edu",    subjects: ["AE101","AE201","AE301","AE401"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST092", name: "Prof. Sindhu Mohan",    dept: "AERO", email: "sindhu.mohan@college.edu",  subjects: ["AE101L","AE201L","AE301L","AE401L"], maxHoursPerWeek: 16, isAbsent: false },
+    { id: "ST093", name: "Mr. Balaji Raman",      dept: "AERO", email: "balaji.raman@college.edu",  subjects: ["AE102","AE202","AE302","AE402"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST094", name: "Dr. Prema Suresh",      dept: "AERO", email: "prema.suresh@college.edu",  subjects: ["AE103","AE203","AE303","AE403"], maxHoursPerWeek: 15, isAbsent: false },
+    { id: "ST095", name: "Mrs. Hema Prakash",     dept: "AERO", email: "hema.prakash@college.edu",  subjects: ["AE101","AE202L","AE302L","AE404"], maxHoursPerWeek: 14, isAbsent: false }
+];

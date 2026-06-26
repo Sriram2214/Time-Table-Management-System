@@ -332,7 +332,7 @@ const TimetableGenerator = {
 
             // Find qualified teachers — support imported data where subjects may be empty arrays
             let qualifiedTeachers = staff.filter(t =>
-                !t.isAbsent &&
+                t.attendanceStatus !== 'Absent' &&
                 (t.subjects.includes(subCode) ||
                     t.dept === session.dept ||  // dept match fallback
                     t.subjects.length === 0)    // teacher with no restrictions = can teach any
@@ -469,7 +469,7 @@ const TimetableGenerator = {
 
             let backups = staff.filter(t =>
                 t.id !== slot.teacherId &&
-                !t.isAbsent &&
+                t.attendanceStatus !== 'Absent' &&
                 !teacherSchedule[t.id].has(slotKey) &&
                 (t.subjects.includes(slot.subjectCode) || t.dept === slot.sectionId.split('-')[0])
             );
@@ -479,7 +479,7 @@ const TimetableGenerator = {
                 const deptCode = slot.sectionId.split('-')[0];
                 backups = staff.filter(t =>
                     t.id !== slot.teacherId &&
-                    !t.isAbsent &&
+                    t.attendanceStatus !== 'Absent' &&
                     !teacherSchedule[t.id].has(slotKey) &&
                     t.dept === deptCode
                 );
@@ -504,7 +504,7 @@ const TimetableGenerator = {
         sessions.forEach(session => {
             const subCode = session.subjectCode;
             let qualifiedTeachers = staff.filter(t =>
-                !t.isAbsent &&
+                t.attendanceStatus !== 'Absent' &&
                 (t.subjects.includes(subCode) || t.dept === session.dept || t.subjects.length === 0)
             ).sort((a, b) => (teacherWeeklyHours[a.id] || 0) - (teacherWeeklyHours[b.id] || 0));
 

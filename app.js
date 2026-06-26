@@ -72,6 +72,13 @@ const app = {
     },
 
     setupEventListeners() {
+        // Set up auto-absence processing every minute
+        setInterval(() => {
+            if (typeof AbsenceManager !== "undefined" && typeof AbsenceManager.autoProcessAbsences === "function") {
+                AbsenceManager.autoProcessAbsences();
+            }
+        }, 60000);
+
         // Dashboard generate button
         document.getElementById('dash-generate-btn').addEventListener('click', () => {
             this.simulateCSPGeneration();
@@ -125,84 +132,40 @@ const app = {
         }
 
         // Staff search
-        document.getElementById('staff-search').addEventListener('input', (e) => {
-            this.renderStaffTable(e.target.value);
-        });
+        
 
         // Subject search
-        document.getElementById('subject-search').addEventListener('input', (e) => {
-            this.renderSubjectTable(e.target.value);
-        });
-
-        // Import Staff CSV/Excel Trigger
-        document.getElementById('import-staff-btn').addEventListener('click', () => {
-            document.getElementById('import-staff-csv-input').click();
-        });
-
-        document.getElementById('import-staff-csv-input').addEventListener('change', (e) => {
-            this.handleDirectStaffImport(e);
-        });
+        
 
         // Clear All Staff Trigger
-        document.getElementById('clear-staff-btn').addEventListener('click', () => {
-            if (confirm("Are you sure you want to delete ALL staff members? This cannot be undone.")) {
-                DataStore.saveStaff([]);
-                this.renderStaffDirectory();
-                this.showToast("All staff members have been deleted.", "success");
-            }
-        });
+        
 
         // Add Staff Modal Trigger
-        document.getElementById('add-staff-btn').addEventListener('click', () => {
-            this.openStaffModal();
-        });
+        
 
         // Add Subject Modal Trigger
-        document.getElementById('add-subject-btn').addEventListener('click', () => {
-            this.openSubjectModal();
-        });
+        
 
         // Modal close buttons
-        document.getElementById('staff-modal-close').addEventListener('click', () => this.closeModal('staff'));
-        document.getElementById('staff-modal-cancel').addEventListener('click', () => this.closeModal('staff'));
-        document.getElementById('subject-modal-close').addEventListener('click', () => this.closeModal('subject'));
-        document.getElementById('subject-modal-cancel').addEventListener('click', () => this.closeModal('subject'));
+        
+        
+        
+        
         document.getElementById('slot-modal-close').addEventListener('click', () => this.closeModal('slot'));
         document.getElementById('slot-modal-cancel').addEventListener('click', () => this.closeModal('slot'));
         document.getElementById('import-modal-close').addEventListener('click', () => this.closeModal('import'));
         document.getElementById('import-modal-cancel').addEventListener('click', () => this.closeModal('import'));
 
         // Modal save actions
-        document.getElementById('staff-modal-save').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.saveStaffMember();
-        });
+        
 
-        document.getElementById('subject-modal-save').addEventListener('click', (e) => {
-            e.preventDefault();
-            this.saveSubject();
-        });
+        
 
         document.getElementById('slot-modal-save').addEventListener('click', () => {
             this.saveSlotAdjustment();
         });
 
-        // Trigger Absence action
-        document.getElementById('trigger-absence-btn').addEventListener('click', () => {
-            const select = document.getElementById('absent-staff-select');
-            const teacherId = select.value;
-            if (!teacherId) return;
-
-            const res = AbsenceManager.markAbsent(teacherId);
-            if (res.success) {
-                const absentTeacherName = DataStore.getStaff().find(t => t.id === teacherId).name;
-                this.showToast(`Reported Prof. ${absentTeacherName} absent. ${res.substitutedCount} classes subbed.`, "warning");
-                this.renderAll();
-                this.updateCharts();
-            } else {
-                this.showToast(res.message, "error");
-            }
-        });
+        
 
         // Modal adjustment conflict listener
         document.getElementById('slot-form-teacher').addEventListener('change', () => this.validateModalSlot());
@@ -216,10 +179,43 @@ const app = {
         this.renderTimetableGrid();
         this.renderStaffTable();
         this.renderSubjectTable();
+        
+
         this.renderAbsenceDropdowns();
-        this.renderActiveAbsences();
+        this.renderDailyAttendance();
         this.renderLogFeeds();
         lucide.createIcons();
+    },
+
+    
+    renderDashboardStaffTable() {
+        const tbody = document.getElementById('dashboard-staff-table-body');
+        if (!tbody) return;
+
+        const staff = DataStore.getStaff();
+        if (staff.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:hsl(var(--text-muted));">No staff imported yet.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = "";
+        staff.forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${s.id}</strong></td>
+                <td>${s.name}</td>
+                <td><span class="badge" style="background:hsl(var(--primary)/0.1);color:hsl(var(--primary));">${s.dept}</span></td>
+                <td>${s.subjects.length > 0 ? s.subjects.join(', ') : '<span style="color:hsl(var(--text-muted));">None</span>'}</td>
+                <td>
+                    ${s.attendanceStatus === 'Present' 
+                        ? `<span class="badge" style="background:hsl(var(--success)/0.1);color:hsl(var(--success));">Present</span>` 
+                        : s.attendanceStatus === 'Absent' 
+                            ? `<span class="badge" style="background:hsl(var(--danger)/0.1);color:hsl(var(--danger));">Absent</span>`
+                            : `<span class="badge" style="background:hsl(var(--warning)/0.1);color:hsl(var(--warning));">Normal</span>`}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
     },
 
     renderStats() {
@@ -241,7 +237,7 @@ const app = {
 
         // 4. Absences Handled
         // Count number of active absent teachers
-        const absentCount = staff.filter(t => t.isAbsent).length;
+        const absentCount = staff.filter(t => t.attendanceStatus === 'Absent').length;
         document.getElementById('stat-absences-handled').innerText = absentCount;
 
         // 5. Update checklist status
@@ -580,118 +576,145 @@ const app = {
         lucide.createIcons();
     },
 
-    renderStaffTable(query = "") {
+
+    clearAllImportedData() {
+        if(confirm("Are you sure you want to clear all imported staff, subjects, and sections? This will also clear the timetable.")) {
+            DataStore.saveStaff([]);
+            DataStore.saveSubjects([]);
+            DataStore.saveSections([]);
+            DataStore.saveSchedule([]);
+            DataStore.saveSubLogs([]);
+            this.showToast("All imported data cleared successfully.", "success");
+            setTimeout(() => window.location.reload(), 1000);
+        }
+    },
+
+    renderStaffTable() {
         const tbody = document.getElementById('staff-table-body');
+        if (!tbody) return;
         tbody.innerHTML = "";
 
         const staff = DataStore.getStaff();
-        const schedule = DataStore.getSchedule();
+        if (staff.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:hsl(var(--text-muted));">No staff imported yet.</td></tr>';
+            return;
+        }
 
-        const filteredStaff = staff.filter(s => {
-            const nameMatch = s.name.toLowerCase().includes(query.toLowerCase());
-            const deptMatch = s.dept.toLowerCase().includes(query.toLowerCase());
-            return nameMatch || deptMatch;
-        });
-
-        filteredStaff.forEach(s => {
-            // Calculate current weekly workload from schedule
-            const assignedHours = schedule.filter(slot => slot.currentTeacherId === s.id).length;
-            const percentageLoad = Math.min(Math.round((assignedHours / s.maxHoursPerWeek) * 100), 100);
-            
-            // Set progress bar colors
-            let progressClass = 'tag-emerald';
-            if (percentageLoad > 85) progressClass = 'tag-danger';
-            else if (percentageLoad > 60) progressClass = 'tag-amber';
-
-            const activeText = s.isAbsent ? "Absent" : "Active";
-            const activeClass = s.isAbsent ? "tag-danger" : "tag-emerald";
-
-            const statusText = s.isAbsent ? "Absent" : "Present";
-            const statusClass = s.isAbsent ? "tag-danger" : "tag-emerald";
-
+        staff.forEach(s => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${s.id}</strong></td>
                 <td>${s.name}</td>
-                <td><span class="tag tag-indigo">${s.dept}</span></td>
-                <td>${s.email}</td>
-                <td>${s.subjects.map(sub => `<code style="background-color: hsl(var(--bg-surface-elevated)); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px;">${sub}</code>`).join('')}</td>
+                <td><span class="badge" style="background:hsl(var(--primary)/0.1);color:hsl(var(--primary));">${s.dept}</span></td>
+                <td>${s.subjects.length > 0 ? s.subjects.join(', ') : '<span style="color:hsl(var(--text-muted));">None</span>'}</td>
                 <td>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="tag ${progressClass}">${assignedHours} / ${s.maxHoursPerWeek} hrs</span>
-                    </div>
-                </td>
-                <td><span class="tag ${statusClass}">${statusText}</span></td>
-                <td>
-                    <button class="btn btn-secondary ${s.isAbsent ? 'btn-danger' : ''}" style="padding: 4px 10px; font-size: 0.75rem;" onclick="app.toggleStaffAttendance('${s.id}')">
-                        ${s.isAbsent ? 'Mark Present' : 'Simulate Absence'}
-                    </button>
-                </td>
-                <td>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="app.openStaffModal('${s.id}')"><i data-lucide="edit" style="width: 14px; height: 14px;"></i></button>
-                        <button class="btn btn-danger" style="padding: 4px 8px; background-color: hsl(var(--danger) / 0.1);" onclick="app.deleteStaff('${s.id}')"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
-                    </div>
+                    ${s.attendanceStatus === 'Present' 
+                        ? `<span class="badge" style="background:hsl(var(--success)/0.1);color:hsl(var(--success));">Present</span>` 
+                        : s.attendanceStatus === 'Absent' 
+                            ? `<span class="badge" style="background:hsl(var(--danger)/0.1);color:hsl(var(--danger));">Absent</span>`
+                            : `<span class="badge" style="background:hsl(var(--warning)/0.1);color:hsl(var(--warning));">Normal</span>`}
                 </td>
             `;
             tbody.appendChild(tr);
         });
-        lucide.createIcons();
     },
 
-    renderSubjectTable(query = "") {
+    renderSubjectTable() {
         const tbody = document.getElementById('subject-table-body');
+        if (!tbody) return;
         tbody.innerHTML = "";
 
         const subjects = DataStore.getSubjects();
+        if (subjects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:hsl(var(--text-muted));">No subjects imported yet.</td></tr>';
+            return;
+        }
 
-        const filteredSubjects = subjects.filter(s => {
-            return s.code.toLowerCase().includes(query.toLowerCase()) || s.name.toLowerCase().includes(query.toLowerCase());
-        });
-
-        filteredSubjects.forEach(s => {
+        subjects.forEach(s => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><strong>${s.code}</strong></td>
                 <td>${s.name}</td>
-                <td><span class="tag tag-indigo">${s.dept}</span></td>
-                <td><span class="tag ${s.type === 'Theory' ? 'tag-emerald' : 'tag-amber'}">${s.type}</span></td>
-                <td>${s.hoursPerWeek} hours</td>
-                <td>
-                    <button class="btn btn-danger" style="padding: 4px 8px; background-color: hsl(var(--danger) / 0.1);" onclick="app.deleteSubject('${s.code}')"><i data-lucide="trash-2" style="width: 14px; height: 14px;"></i></button>
-                </td>
+                <td><span class="badge" style="background:hsl(var(--primary)/0.1);color:hsl(var(--primary));">${s.dept}</span></td>
+                <td>${s.year || '-'}</td>
+                <td>${s.semester || '-'}</td>
+                <td>${s.type}</td>
+                <td>${s.hoursPerWeek}</td>
             `;
             tbody.appendChild(tr);
         });
-        lucide.createIcons();
     },
 
-    renderAbsenceDropdowns() {
-        const select = document.getElementById('absent-staff-select');
-        select.innerHTML = `<option value="">-- Choose Staff Member --</option>`;
+    renderDailyAttendance() {
+        const tbody = document.getElementById('active-absences-body');
+        if (!tbody) return;
 
         const staff = DataStore.getStaff();
-        // filter out already absent
-        const activeStaff = staff.filter(t => !t.isAbsent);
+        if (staff.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 24px; color:hsl(var(--text-muted));">No staff available.</td></tr>`;
+            return;
+        }
 
-        activeStaff.sort((a,b) => a.name.localeCompare(b.name));
+        tbody.innerHTML = "";
+        staff.forEach(s => {
+            const tr = document.createElement('tr');
+            let statusBadge = '';
+            let actionBtn = '';
 
-        activeStaff.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t.id;
-            opt.innerText = `${t.name} (${t.dept})`;
-            select.appendChild(opt);
+            if (s.attendanceStatus === 'Present') {
+                statusBadge = `<span class="badge" style="background:hsl(var(--success)/0.1);color:hsl(var(--success));">Present</span>`;
+                actionBtn = `<button class="btn btn-sm btn-ghost" disabled>Marked</button>`;
+            } else if (s.attendanceStatus === 'Absent') {
+                statusBadge = `<span class="badge" style="background:hsl(var(--danger)/0.1);color:hsl(var(--danger));">Absent</span>`;
+                actionBtn = `<button class="btn btn-sm btn-outline btn-return" data-id="${s.id}">Return to Present</button>`;
+            } else {
+                statusBadge = `<span class="badge" style="background:hsl(var(--warning)/0.1);color:hsl(var(--warning));">Normal</span>`;
+                actionBtn = `<button class="btn btn-sm btn-primary btn-mark-present" data-id="${s.id}">Mark Present</button>`;
+            }
+
+            tr.innerHTML = `
+                <td>${s.id}</td>
+                <td><strong>${s.name}</strong><div style="font-size:0.7rem; color:hsl(var(--text-muted));">${s.dept}</div></td>
+                <td>${statusBadge}</td>
+                <td>${actionBtn}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Add event listeners
+        document.querySelectorAll('.btn-mark-present').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                const t = DataStore.getStaff().find(x => x.id === id);
+                if (t) {
+                    t.attendanceStatus = 'Present';
+                    DataStore.saveStaff(DataStore.getStaff().map(x => x.id === id ? t : x));
+                    this.showToast(`${t.name} marked as Present.`, "success");
+                    this.renderAll();
+                }
+            });
+        });
+
+        document.querySelectorAll('.btn-return').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.getAttribute('data-id');
+                AbsenceManager.markPresent(id);
+                this.showToast(`Restored original classes for staff.`, "success");
+                this.renderAll();
+            });
         });
     },
 
-    renderActiveAbsences() {
+    // Old function overriden to do nothing (we don't need dropdowns anymore)
+    renderAbsenceDropdowns() {
+
         const body = document.getElementById('active-absences-table-body');
         const listDiv = document.getElementById('active-absences-list');
         body.innerHTML = "";
         listDiv.innerHTML = "";
 
         const staff = DataStore.getStaff();
-        const absentStaff = staff.filter(t => t.isAbsent);
+        const absentStaff = staff.filter(t => t.attendanceStatus === 'Absent');
 
         if (absentStaff.length === 0) {
             body.innerHTML = `<tr><td colspan="5" style="text-align: center; color: hsl(var(--text-muted)); font-style: italic;">No active absences reported today.</td></tr>`;
@@ -927,7 +950,7 @@ const app = {
                                 email: '',
                                 subjects: subjects,
                                 maxHoursPerWeek: 15,
-                                isAbsent: false
+                                attendanceStatus: 'Normal'
                             });
                             importedCount++;
                         }
@@ -1053,7 +1076,7 @@ const app = {
                 email: email,
                 subjects: expertise,
                 maxHoursPerWeek: hours,
-                isAbsent: false
+                attendanceStatus: 'Normal'
             });
         }
 
@@ -1137,7 +1160,7 @@ const app = {
         rSelect.innerHTML = "";
 
         // Fill primary teacher: filter by those qualified for this subject
-        const qualifiedT = staff.filter(t => t.subjects.includes(slot.subjectCode) && !t.isAbsent);
+        const qualifiedT = staff.filter(t => t.subjects.includes(slot.subjectCode) && !t.attendanceStatus === 'Absent');
         qualifiedT.forEach(t => {
             const opt = document.createElement('option');
             opt.value = t.id;
@@ -1199,12 +1222,12 @@ const app = {
         
         // Check if teacher is absent
         const primaryTeacher = staff.find(t => t.id === teacherId);
-        if (primaryTeacher && primaryTeacher.isAbsent) {
+        if (primaryTeacher && primaryTeacher.attendanceStatus === 'Absent') {
             this.appendWarning(warningDiv, `Warning: Prof. ${primaryTeacher.name} is reported absent. Substitution will be active.`, 'amber');
         }
 
         const backupTeacher = staff.find(t => t.id === backupId);
-        if (backupTeacher && backupTeacher.isAbsent) {
+        if (backupTeacher && backupTeacher.attendanceStatus === 'Absent') {
             this.appendWarning(warningDiv, `Warning: Backup Prof. ${backupTeacher.name} is reported absent!`, 'danger');
         }
 
@@ -1479,7 +1502,7 @@ const app = {
         // Count unassigned backups (meaning backup is null AND teacher is absent)
         const unassigned = schedule.filter(s => {
             const t = staff.find(t => t.id === s.currentTeacherId);
-            return s.backupTeacherId === null && t && t.isAbsent;
+            return s.backupTeacherId === null && t && t.attendanceStatus === 'Absent';
         }).length;
 
         const regular = total - subbed - unassigned;
@@ -1504,30 +1527,19 @@ const app = {
     openImportModal() {
         // Reset state
         this._importState = { staff: null, subjects: null, sections: null };
-        ['staff', 'subjects', 'sections'].forEach(type => {
-            document.getElementById(`import-${type}-preview`).innerHTML = '';
-            document.getElementById(`import-${type}-filename`).innerText = 'No file chosen';
-            document.getElementById(`import-${type}-input`).value = '';
-        });
+        document.getElementById('import-master-filename').innerText = 'No file chosen';
+        document.getElementById('import-master-input').value = '';
         this._updateImportStatusBar();
-        this._setImportTab('staff');
         document.getElementById('import-modal-overlay').classList.add('active');
 
-        // Tab buttons
-        document.querySelectorAll('.import-tab-btn').forEach(btn => {
-            btn.onclick = () => this._setImportTab(btn.getAttribute('data-tab'));
-        });
+        // File picker
+        const fileBtn = document.getElementById('import-master-file-btn');
+        const fileInput = document.getElementById('import-master-input');
+        fileBtn.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => this._handleMasterImportFile(e.target.files[0]);
 
-        // File pickers
-        ['staff', 'subjects', 'sections'].forEach(type => {
-            const fileBtn = document.getElementById(`import-${type}-file-btn`);
-            const fileInput = document.getElementById(`import-${type}-input`);
-            fileBtn.onclick = () => fileInput.click();
-            fileInput.onchange = (e) => this._handleImportFile(type, e.target.files[0]);
-
-            const sampleBtn = document.getElementById(`import-${type}-sample-btn`);
-            sampleBtn.onclick = () => this._loadSampleData(type);
-        });
+        const sampleBtn = document.getElementById('import-master-sample-btn');
+        sampleBtn.onclick = () => this._loadSampleData();
 
         // Confirm
         document.getElementById('import-modal-confirm').onclick = () => this._confirmImport();
@@ -1535,114 +1547,70 @@ const app = {
         lucide.createIcons();
     },
 
-    _setImportTab(tab) {
-        document.querySelectorAll('.import-tab-panel').forEach(p => p.style.display = 'none');
-        document.getElementById(`import-tab-${tab}`).style.display = 'block';
-        document.querySelectorAll('.import-tab-btn').forEach(btn => {
-            const isActive = btn.getAttribute('data-tab') === tab;
-            btn.style.color = isActive ? 'hsl(var(--primary))' : 'hsl(var(--text-secondary))';
-            btn.style.borderBottom = isActive ? '2px solid hsl(var(--primary))' : '2px solid transparent';
-        });
-    },
-
-    _handleImportFile(type, file) {
+    _handleMasterImportFile(file) {
         if (!file) return;
-        document.getElementById(`import-${type}-filename`).innerText = file.name;
+        document.getElementById('import-master-filename').innerText = file.name;
 
         const ext = file.name.split('.').pop().toLowerCase();
 
         if (ext === 'json') {
-            // ── JSON parsing ──────────────────────────────────────────
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (!Array.isArray(data)) throw new Error('Expected a JSON array.');
-                    const normalized = this._normalizeImportRows(type, data);
-                    this._importState[type] = normalized;
-                    this._renderImportPreview(type, normalized);
+                    if (data.staff) this._importState.staff = this._normalizeImportRows('staff', data.staff);
+                    if (data.subjects) this._importState.subjects = this._normalizeImportRows('subjects', data.subjects);
+                    if (data.sections) this._importState.sections = this._normalizeImportRows('sections', data.sections);
                     this._updateImportStatusBar();
                 } catch (err) {
                     this.showToast(`Invalid JSON file: ${err.message}`, 'error');
-                    document.getElementById(`import-${type}-preview`).innerHTML =
-                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ JSON parse error: ${err.message}</p>`;
-                }
-            };
-            reader.readAsText(file);
-
-        } else if (ext === 'csv') {
-            // ── CSV parsing ───────────────────────────────────────────
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = this._parseCSV(e.target.result);
-                    if (!data.length) throw new Error('CSV file is empty or has no data rows.');
-                    const normalized = this._normalizeImportRows(type, data);
-                    this._importState[type] = normalized;
-                    this._renderImportPreview(type, normalized);
-                    this._updateImportStatusBar();
-                } catch (err) {
-                    this.showToast(`Invalid CSV file: ${err.message}`, 'error');
-                    document.getElementById(`import-${type}-preview`).innerHTML =
-                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ CSV parse error: ${err.message}</p>`;
                 }
             };
             reader.readAsText(file);
 
         } else if (ext === 'xlsx' || ext === 'xls') {
-            // ── Excel parsing via SheetJS ─────────────────────────────
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded yet. Please wait and retry.');
                     const workbook = XLSX.read(e.target.result, { type: 'binary' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const rawData = XLSX.utils.sheet_to_json(firstSheet, { defval: '' });
-                    if (!rawData.length) throw new Error('Excel sheet is empty or has no data rows.');
-                    const normalized = this._normalizeImportRows(type, rawData);
-                    this._importState[type] = normalized;
-                    this._renderImportPreview(type, normalized);
+                    
+                    // Parse Staff Sheet
+                    const staffSheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('staff'));
+                    if (staffSheetName) {
+                        const rawStaff = XLSX.utils.sheet_to_json(workbook.Sheets[staffSheetName], { defval: '' });
+                        this._importState.staff = this._normalizeImportRows('staff', rawStaff);
+                    }
+
+                    // Parse Subjects Sheet
+                    const subjSheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('subject'));
+                    if (subjSheetName) {
+                        const rawSubj = XLSX.utils.sheet_to_json(workbook.Sheets[subjSheetName], { defval: '' });
+                        this._importState.subjects = this._normalizeImportRows('subjects', rawSubj);
+                    }
+
+                    // Parse Sections Sheet
+                    const sectSheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('section'));
+                    if (sectSheetName) {
+                        const rawSect = XLSX.utils.sheet_to_json(workbook.Sheets[sectSheetName], { defval: '' });
+                        this._importState.sections = this._normalizeImportRows('sections', rawSect);
+                    }
+
                     this._updateImportStatusBar();
                 } catch (err) {
                     this.showToast(`Invalid Excel file: ${err.message}`, 'error');
-                    document.getElementById(`import-${type}-preview`).innerHTML =
-                        `<p style="color:hsl(var(--danger));font-size:0.8rem;">⚠ Excel parse error: ${err.message}</p>`;
                 }
             };
             reader.readAsBinaryString(file);
-
         } else {
-            this.showToast(`Unsupported file type ".${ext}". Please use .json, .csv, .xlsx or .xls`, 'error');
+            this.showToast(`Unsupported file type ".${ext}". Please use .xlsx or .json`, 'error');
         }
-    },
-
-    // ── CSV Parser: returns array of objects (header row → keys) ─────
-    _parseCSV(text) {
-        const lines = text.trim().split(/\r?\n/);
-        if (lines.length < 2) return [];
-        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-        return lines.slice(1).filter(l => l.trim()).map(line => {
-            // Handle quoted fields with commas inside
-            const values = [];
-            let cur = '', inQuote = false;
-            for (let i = 0; i < line.length; i++) {
-                const ch = line[i];
-                if (ch === '"') { inQuote = !inQuote; }
-                else if (ch === ',' && !inQuote) { values.push(cur.trim()); cur = ''; }
-                else { cur += ch; }
-            }
-            values.push(cur.trim());
-            const obj = {};
-            headers.forEach((h, i) => { obj[h] = (values[i] || '').replace(/^"|"$/g, ''); });
-            return obj;
-        });
     },
 
     // ── Normalize rows: handle subjects as string → array, cast numbers
     _normalizeImportRows(type, rows) {
         return rows.map(row => {
             const r = { ...row };
-            // subjects field: "CS101,CS201" or ["CS101"] → always array
             if ('subjects' in r) {
                 if (typeof r.subjects === 'string') {
                     r.subjects = r.subjects ? r.subjects.split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -1650,51 +1618,18 @@ const app = {
                     r.subjects = [];
                 }
             }
-            // numeric coercions
             if ('maxHoursPerWeek' in r) r.maxHoursPerWeek = Number(r.maxHoursPerWeek) || 15;
             if ('hoursPerWeek' in r)    r.hoursPerWeek    = Number(r.hoursPerWeek)    || 3;
             return r;
         });
     },
 
-    _loadSampleData(type) {
-        const samples = {
-            staff: DEFAULT_STAFF,
-            subjects: DEFAULT_SUBJECTS,
-            sections: DEFAULT_SECTIONS
-        };
-        this._importState[type] = samples[type];
-        document.getElementById(`import-${type}-filename`).innerText = 'Sample data loaded';
-        this._renderImportPreview(type, samples[type]);
+    _loadSampleData() {
+        this._importState.staff = SAMPLE_STAFF;
+        this._importState.subjects = SAMPLE_SUBJECTS;
+        this._importState.sections = DEFAULT_SECTIONS;
+        document.getElementById('import-master-filename').innerText = 'Sample Data Loaded';
         this._updateImportStatusBar();
-    },
-
-    _renderImportPreview(type, data) {
-        const container = document.getElementById(`import-${type}-preview`);
-        if (!data || data.length === 0) {
-            container.innerHTML = `<p style="color:hsl(var(--text-muted));font-size:0.8rem;">No records to preview.</p>`;
-            return;
-        }
-
-        const headers = Object.keys(data[0]);
-        const rows = data.slice(0, 6); // Preview first 6 rows
-
-        container.innerHTML = `
-            <p style="font-size:0.75rem;color:hsl(var(--text-muted));margin-bottom:6px;">Showing ${Math.min(6,data.length)} of ${data.length} records</p>
-            <div class="data-table-container" style="max-height:140px;overflow:auto;">
-                <table class="data-table" style="font-size:0.75rem;">
-                    <thead>
-                        <tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>
-                    </thead>
-                    <tbody>
-                        ${rows.map(row => `<tr>${headers.map(h => {
-                            const val = Array.isArray(row[h]) ? row[h].join(', ') : (row[h] ?? '');
-                            return `<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${val}">${val}</td>`;
-                        }).join('')}</tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
     },
 
     _updateImportStatusBar() {
@@ -1706,7 +1641,7 @@ const app = {
         const fmt = (label, icon, count) => {
             const color = count !== null ? 'hsl(var(--success))' : 'hsl(var(--text-muted))';
             const val = count !== null ? `<strong style="color:${color};">${count} records</strong>` : '<strong>–</strong>';
-            return `<i data-lucide="${icon}" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> ${label}: ${val}`;
+            return `<i data-lucide="${icon}" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i> ${label}: ${val}`;
         };
 
         document.getElementById('import-status-staff').innerHTML = fmt('Staff', 'users', staffCount);
@@ -1726,16 +1661,17 @@ const app = {
         const state = this._importState;
         let imported = [];
 
-        // Merge imported data into DataStore (keep existing where not provided)
+        // Merge imported data into DataStore
         if (state.staff) {
             const normalized = state.staff.map(s => ({
                 id: s.id || `ST${Math.random().toString(36).substr(2,4).toUpperCase()}`,
                 name: s.name || 'Unknown',
                 dept: s.dept || 'CSE',
+                designation: s.designation || 'Professor',
                 email: s.email || '',
                 subjects: Array.isArray(s.subjects) ? s.subjects : [],
                 maxHoursPerWeek: Number(s.maxHoursPerWeek) || 15,
-                isAbsent: false
+                attendanceStatus: 'Normal'
             }));
             DataStore.saveStaff(normalized);
             imported.push(`${normalized.length} staff`);
@@ -1746,6 +1682,8 @@ const app = {
                 code: s.code || '',
                 name: s.name || '',
                 dept: s.dept || 'CSE',
+                year: s.year || 'Y1',
+                semester: s.semester || 'S1',
                 type: s.type || 'Theory',
                 hoursPerWeek: Number(s.hoursPerWeek) || 3
             }));
@@ -1764,12 +1702,12 @@ const app = {
         }
 
         this.closeModal('import');
-        this.showToast(`Imported: ${imported.join(', ')}.`, 'success');
+        this.showToast(`Imported: ${imported.join(', ')}. Automatically starting generation...`, 'success');
 
-        // Reload to show imported data without auto-generating
+        // Automatically trigger generator immediately instead of page reload
         setTimeout(() => {
-            window.location.reload();
-        }, 800);
+            this.simulateCSPGeneration();
+        }, 500);
     }
 };
 

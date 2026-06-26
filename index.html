@@ -32,19 +32,20 @@
                     </li>
                     <li class="nav-item" data-panel="generator">
                         <i data-lucide="sliders"></i>
-                        Timetable Engine
+                        Timetable Gen Dashboard
                     </li>
+                    
                     <li class="nav-item" data-panel="staff">
                         <i data-lucide="users"></i>
-                        Staff Directory
+                        Staff
                     </li>
                     <li class="nav-item" data-panel="subjects">
                         <i data-lucide="book-open"></i>
-                        Subjects & Labs
+                        Subjects
                     </li>
                     <li class="nav-item" data-panel="absence">
                         <i data-lucide="shield-alert"></i>
-                        Absence Control
+                        Daily Attendance
                     </li>
                     <li class="nav-item" data-panel="reports">
                         <i data-lucide="bar-chart-3"></i>
@@ -231,6 +232,30 @@
                 </div>
 
                 <!-- Dynamic Quick Switch Tabs -->
+                
+                <!-- Staff Profiles Overview -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h3>Imported Staff Profiles & Expertise</h3>
+                    </div>
+                    <div class="data-table-container" style="max-height: 250px; overflow-y: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Expertise Subjects</th>
+                                    <th>Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-staff-table-body">
+                                <tr><td colspan="4" style="text-align:center;color:hsl(var(--text-muted));">No staff imported yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
                 <div id="timetable-tabs-container" style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;"></div>
 
                 <div id="timetable-view-wrapper">
@@ -238,75 +263,72 @@
                 </div>
             </section>
 
-            <!-- 3. STAFF DIRECTORY PANEL -->
+            
+            <!-- 3. STAFF DIRECTORY PANEL (READ-ONLY) -->
             <section id="staff-panel" class="panel">
-                <div class="action-bar">
-                    <input type="text" class="search-input" id="staff-search" placeholder="Search staff by name or dept...">
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-secondary" id="clear-staff-btn" style="color: hsl(0, 80%, 60%); border-color: hsl(0, 80%, 60%);">
-                            <i data-lucide="trash-2"></i> Clear All
-                        </button>
-                        <input type="file" id="import-staff-csv-input" accept=".csv,.xlsx,.xls" style="display:none;">
-                        <button class="btn btn-secondary" id="import-staff-btn">
-                            <i data-lucide="upload"></i> Import CSV/Excel
-                        </button>
-                        <button class="btn btn-primary" id="add-staff-btn">
-                            <i data-lucide="user-plus"></i> Add New Staff
-                        </button>
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                            <div>
+                                <h3>Staff Directory</h3>
+                                <p style="font-size: 0.8rem; color: hsl(var(--text-muted)); margin-top: 4px;">Read-only view of imported staff details</p>
+                            </div>
+                            <button class="btn btn-secondary" onclick="app.clearAllImportedData()" style="background:hsl(var(--danger)/0.1);color:hsl(var(--danger));border:none;font-size:0.8rem;padding:6px 12px;">
+                                <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Clear All Data
+                            </button>
+                        </div>
+</div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff ID</th>
+                                    <th>Staff Name</th>
+                                    <th>Department</th>
+                                    <th>Expertise Subjects</th>
+                                    <th>Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staff-table-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Staff ID</th>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Email</th>
-                                <th>Expertise Subjects</th>
-                                <th>Weekly Load</th>
-                                <th>Attendance Status</th>
-                                <th>Simulate Action</th>
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                        <tbody id="staff-table-body">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
                 </div>
             </section>
 
-            <!-- 4. SUBJECTS & LABS PANEL -->
+            <!-- 4. SUBJECTS & LABS PANEL (READ-ONLY) -->
             <section id="subjects-panel" class="panel">
-                <div class="action-bar">
-                    <input type="text" class="search-input" id="subject-search" placeholder="Search subjects by code or name...">
-                    <button class="btn btn-primary" id="add-subject-btn">
-                        <i data-lucide="plus-circle"></i> Add New Subject
-                    </button>
-                </div>
-
-                <div class="data-table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Subject Code</th>
-                                <th>Subject Name</th>
-                                <th>Department</th>
-                                <th>Type</th>
-                                <th>Required Hours/Week</th>
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                        <tbody id="subject-table-body">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3>Subjects & Labs</h3>
+                            <p style="font-size: 0.8rem; color: hsl(var(--text-muted)); margin-top: 4px;">Read-only view of imported subject details</p>
+                        </div>
+                    </div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Subject Name</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Semester</th>
+                                    <th>Subject Type</th>
+                                    <th>Hours per Week</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subject-table-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
             <!-- 5. ABSENCE SIMULATOR PANEL -->
+
             <section id="absence-panel" class="panel">
                 <div class="dashboard-layout">
                     <!-- Left panel: Trigger absence -->
@@ -339,7 +361,7 @@
                                         <tr>
                                             <th>Staff ID</th>
                                             <th>Name</th>
-                                            <th>Department</th>
+                                            <th>Department</th>\n                                    
                                             <th>Email</th>
                                             <th>Action</th>
                                         </tr>
@@ -389,118 +411,6 @@
                 </div>
             </section>
         </main>
-    </div>
-
-    <!-- STAFF MODAL -->
-    <div class="modal-overlay" id="staff-modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="staff-modal-title">Add New Staff Member</h3>
-                <span class="modal-close" id="staff-modal-close"><i data-lucide="x"></i></span>
-            </div>
-            <div class="modal-body">
-                <form id="staff-form">
-                    <input type="hidden" id="staff-form-id-field">
-                    <div class="form-group">
-                        <label for="staff-form-id">Staff ID (e.g. ST050)</label>
-                        <input type="text" class="form-input" id="staff-form-id" required placeholder="ST050">
-                    </div>
-                    <div class="form-group">
-                        <label for="staff-form-name">Full Name</label>
-                        <input type="text" class="form-input" id="staff-form-name" required placeholder="Dr. Jane Doe">
-                    </div>
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="staff-form-dept">Department</label>
-                            <select class="select-input" id="staff-form-dept">
-                                <option value="CSE">CSE</option>
-                                <option value="IT">IT</option>
-                                <option value="AIDS">AIDS</option>
-                                <option value="AIML">AIML</option>
-                                <option value="Cyber Security">Cyber Security</option>
-                                <option value="IoT">IoT</option>
-                                <option value="ECE">ECE</option>
-                                <option value="EEE">EEE</option>
-                                <option value="Mechanical">Mechanical</option>
-                                <option value="Civil">Civil</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="staff-form-hours">Max Hours/Week</label>
-                            <input type="number" class="form-input" id="staff-form-hours" required min="4" max="25" value="15">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="staff-form-email">Email Address</label>
-                        <input type="email" class="form-input" id="staff-form-email" required placeholder="jane.doe@college.edu">
-                    </div>
-                    <div class="form-group">
-                        <label>Expertise Subjects (Check all that apply)</label>
-                        <div class="checkbox-group" id="staff-form-subjects-container">
-                            <!-- Filled dynamically -->
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="staff-modal-cancel">Cancel</button>
-                <button class="btn btn-primary" id="staff-modal-save">Save Staff</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- SUBJECT MODAL -->
-    <div class="modal-overlay" id="subject-modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="subject-modal-title">Add New Subject</h3>
-                <span class="modal-close" id="subject-modal-close"><i data-lucide="x"></i></span>
-            </div>
-            <div class="modal-body">
-                <form id="subject-form">
-                    <div class="form-group">
-                        <label for="subject-form-code">Subject Code (e.g. CS204)</label>
-                        <input type="text" class="form-input" id="subject-form-code" required placeholder="CS204">
-                    </div>
-                    <div class="form-group">
-                        <label for="subject-form-name">Subject Name</label>
-                        <input type="text" class="form-input" id="subject-form-name" required placeholder="Theory of Computation">
-                    </div>
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="subject-form-dept">Department</label>
-                            <select class="select-input" id="subject-form-dept">
-                                <option value="CSE">CSE</option>
-                                <option value="IT">IT</option>
-                                <option value="AIDS">AIDS</option>
-                                <option value="AIML">AIML</option>
-                                <option value="Cyber Security">Cyber Security</option>
-                                <option value="IoT">IoT</option>
-                                <option value="ECE">ECE</option>
-                                <option value="EEE">EEE</option>
-                                <option value="Mechanical">Mechanical</option>
-                                <option value="Civil">Civil</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject-form-type">Type</label>
-                            <select class="select-input" id="subject-form-type">
-                                <option value="Theory">Theory</option>
-                                <option value="Practical/Lab">Practical/Lab</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject-form-hours">Hours per Week</label>
-                        <input type="number" class="form-input" id="subject-form-hours" required min="1" max="6" value="3">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="subject-modal-cancel">Cancel</button>
-                <button class="btn btn-primary" id="subject-modal-save">Save Subject</button>
-            </div>
-        </div>
     </div>
 
     <!-- SLOT ADJUSTMENT MODAL -->
@@ -561,102 +471,65 @@
                 <span class="modal-close" id="import-modal-close"><i data-lucide="x"></i></span>
             </div>
             <div class="modal-body" style="padding:0;">
+                <div style="padding: 24px;">
+                    <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:16px;margin-bottom:14px;font-size:0.85rem;">
+                        <h4 style="margin-bottom: 8px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="file-spreadsheet" style="color: hsl(var(--primary));"></i>
+                            Upload Master Dataset
+                        </h4>
+                        <p style="color:hsl(var(--text-secondary)); margin-bottom: 12px; line-height: 1.5;">
+                            Upload a single file containing all your required data. The system will automatically process everything and generate the timetable immediately.
+                        </p>
+                        
+                        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                            <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:4px 8px;font-size:0.75rem;font-weight:700;">📗 Excel (.xlsx) - Recommended</span>
+                            <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:4px 8px;font-size:0.75rem;font-weight:700;">📄 JSON</span>
+                        </div>
 
-                <!-- Tab Nav -->
-                <div id="import-tabs" style="display:flex;border-bottom:1px solid hsl(var(--border-color));padding: 0 24px;">
-                    <button class="import-tab-btn active" data-tab="staff" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--primary));border-bottom:2px solid hsl(var(--primary));margin-bottom:-1px;">Staff</button>
-                    <button class="import-tab-btn" data-tab="subjects" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--text-secondary));border-bottom:2px solid transparent;margin-bottom:-1px;">Subjects</button>
-                    <button class="import-tab-btn" data-tab="sections" style="padding:12px 16px;font-size:0.85rem;font-weight:600;border:none;background:none;cursor:pointer;color:hsl(var(--text-secondary));border-bottom:2px solid transparent;margin-bottom:-1px;">Sections</button>
+                        <div style="background:hsl(var(--primary)/0.05); padding: 12px; border-radius: 6px; border-left: 3px solid hsl(var(--primary)); margin-bottom: 16px;">
+                            <strong>Expected Excel Structure:</strong>
+                            <ul style="margin-top: 6px; margin-left: 20px; font-size: 0.8rem; color: hsl(var(--text-muted));">
+                                <li><strong>Staff Sheet:</strong> id, name, dept, designation, maxHoursPerWeek, subjects</li>
+                                <li><strong>Subjects Sheet:</strong> code, name, dept, year, semester, type, hoursPerWeek</li>
+                                <li><strong>Sections Sheet:</strong> id, name, dept</li>
+                            </ul>
+                        </div>
+
+                        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap; background: hsl(var(--bg-body)); padding: 16px; border: 1px dashed hsl(var(--border-color)); border-radius: 8px; justify-content: center;">
+                            <button class="btn btn-primary" id="import-master-file-btn" style="font-size:0.9rem; padding: 10px 20px;">
+                                <i data-lucide="upload-cloud"></i> Choose File
+                            </button>
+                            <input type="file" id="import-master-input" accept=".json,.xlsx,.xls" style="display:none;">
+                            <button class="btn btn-secondary" id="import-master-sample-btn" style="font-size:0.8rem; padding: 8px 16px;">
+                                Use Sample Data
+                            </button>
+                        </div>
+                        <div style="text-align: center; margin-top: 12px;">
+                            <span id="import-master-filename" style="font-size:0.85rem;color:hsl(var(--text-muted));font-weight: 600;">No file chosen</span>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Tab Panels -->
-                <div style="padding:20px 24px;">
-
-                    <!-- Staff Tab -->
-                    <div id="import-tab-staff" class="import-tab-panel">
-                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
-                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
-                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
-                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
-                            </div>
-                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">id, name, dept, email, subjects, maxHoursPerWeek</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "id":"ST001", "name":"Dr. Name", "dept":"CSE", "email":"a@b.com", "subjects":"CS101,CS201", "maxHoursPerWeek":15 } ]</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers (id, name, dept, email, subjects, maxHoursPerWeek). subjects column = comma-separated codes.</p>
-                        </div>
-                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="import-staff-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
-                            <input type="file" id="import-staff-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
-                            <span id="import-staff-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
-                            <button class="btn btn-secondary" id="import-staff-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
-                        </div>
-                        <div id="import-staff-preview" style="max-height:180px;overflow-y:auto;"></div>
-                    </div>
-
-                    <!-- Subjects Tab -->
-                    <div id="import-tab-subjects" class="import-tab-panel" style="display:none;">
-                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
-                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
-                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
-                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
-                            </div>
-                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">code, name, dept, type, hoursPerWeek</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "code":"CS101", "name":"Intro to Programming", "dept":"CSE", "type":"Theory", "hoursPerWeek":3 } ]</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers. type = "Theory" or "Practical/Lab".</p>
-                        </div>
-                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="import-subjects-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
-                            <input type="file" id="import-subjects-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
-                            <span id="import-subjects-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
-                            <button class="btn btn-secondary" id="import-subjects-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
-                        </div>
-                        <div id="import-subjects-preview" style="max-height:180px;overflow-y:auto;"></div>
-                    </div>
-
-                    <!-- Sections Tab -->
-                    <div id="import-tab-sections" class="import-tab-panel" style="display:none;">
-                        <div style="background:hsl(var(--bg-surface-elevated));border:1px solid hsl(var(--border-color));border-radius:var(--radius-md);padding:12px 16px;margin-bottom:14px;font-size:0.8rem;">
-                            <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-                                <span style="background:hsl(210,90%,55%,0.15);color:hsl(210,90%,55%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📄 JSON</span>
-                                <span style="background:hsl(140,70%,40%,0.15);color:hsl(140,70%,35%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📊 CSV</span>
-                                <span style="background:hsl(30,90%,50%,0.15);color:hsl(30,80%,40%);border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:700;">📗 Excel (.xlsx/.xls)</span>
-                            </div>
-                            <p style="font-weight:700;margin-bottom:4px;">📋 Columns required: <code style="font-weight:400;">id, name, dept</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;margin-bottom:4px;">JSON: <code style="color:hsl(var(--primary));">[ { "id":"CSE-Y1", "name":"CSE 1st Year", "dept":"CSE" } ]</code></p>
-                            <p style="color:hsl(var(--text-muted));font-size:0.73rem;">CSV/Excel: First row = headers (id, name, dept).</p>
-                        </div>
-                        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="import-sections-file-btn" style="font-size:0.82rem;"><i data-lucide="upload" style="width:14px;height:14px;"></i> Choose File</button>
-                            <input type="file" id="import-sections-input" accept=".json,.csv,.xlsx,.xls" style="display:none;">
-                            <span id="import-sections-filename" style="font-size:0.8rem;color:hsl(var(--text-muted));">No file chosen &nbsp;(.json / .csv / .xlsx / .xls)</span>
-                            <button class="btn btn-secondary" id="import-sections-sample-btn" style="font-size:0.75rem;padding:5px 10px;">Use Sample Data</button>
-                        </div>
-                        <div id="import-sections-preview" style="max-height:180px;overflow-y:auto;"></div>
-                    </div>
-
-                </div>
-
+                
                 <!-- Status Summary Bar -->
                 <div id="import-status-bar" style="display:flex;gap:16px;padding:12px 24px;background:hsl(var(--bg-surface-elevated));border-top:1px solid hsl(var(--border-color));flex-wrap:wrap;">
-                    <span id="import-status-staff" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="users" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Staff: <strong>–</strong></span>
-                    <span id="import-status-subjects" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="book-open" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Subjects: <strong>–</strong></span>
-                    <span id="import-status-sections" style="font-size:0.8rem;color:hsl(var(--text-muted));"><i data-lucide="layout-grid" style="width:12px;height:12px;display:inline;vertical-align:middle;"></i> Sections: <strong>–</strong></span>
+                    <span id="import-status-staff" style="font-size:0.85rem;color:hsl(var(--text-muted));"><i data-lucide="users" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i> Staff: <strong>–</strong></span>
+                    <span id="import-status-subjects" style="font-size:0.85rem;color:hsl(var(--text-muted));"><i data-lucide="book-open" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i> Subjects: <strong>–</strong></span>
+                    <span id="import-status-sections" style="font-size:0.85rem;color:hsl(var(--text-muted));"><i data-lucide="layout-grid" style="width:14px;height:14px;display:inline;vertical-align:middle;"></i> Sections: <strong>–</strong></span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="import-modal-cancel">Cancel</button>
-                <button class="btn btn-primary" id="import-modal-confirm" disabled style="opacity:0.5;">
-                    <i data-lucide="check"></i> Import Data
+                <button class="btn btn-primary" id="import-modal-confirm" disabled style="opacity:0.5; padding: 10px 24px; font-size: 0.95rem;">
+                    <i data-lucide="play-circle"></i> Import & Generate
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Core App Logic Scripts -->
-    <script src="data.js?v=12"></script>
-    <script src="generator.js?v=12"></script>
-    <script src="absence.js?v=12"></script>
-    <script src="app.js?v=12"></script>
+    <script src="data.js?v=15"></script>
+    <script src="generator.js?v=15"></script>
+    <script src="absence.js?v=15"></script>
+    <script src="app.js?v=15"></script>
 </body>
 </html>
